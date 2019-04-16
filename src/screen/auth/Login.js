@@ -10,7 +10,7 @@ export default class Login extends React.Component {
     firebaseService
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => Actions.reset('home'))
+      .then(() => Actions.reset('drawer'))
       .catch(error => this.setState({ errorMessage: error.message }))
   }
   render() {

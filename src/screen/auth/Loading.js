@@ -9,7 +9,7 @@ export default class Loading extends React.Component {
     firebaseService.auth().onAuthStateChanged(user => {
       // console.log(user)
       if(user != null){
-        Actions.reset('home')
+        Actions.replace('drawer')
         
       }else{
         Actions.reset('signup')
