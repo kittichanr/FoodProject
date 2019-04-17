@@ -7,6 +7,7 @@ import SignUp from '../screen/auth/SignUp'
 import Login from '../screen/auth/Login'
 import HomeScreen from '../screen/HomeScreen'
 import Restaurant from '../screen/Restaurant'
+import MenuScreen from '../screen/MenuScreen'
 import DrawerMenu from '../component/DrawerMenu'
 
 const _backAndroidHandler = () => {
@@ -48,6 +49,7 @@ const AppNavigator = () => (
       </Drawer>  
     </Scene>
     <Scene key='restaurant' component={Restaurant} hideNavBar/>
+    <Scene key='menu' component={MenuScreen} hideNavBar/>
    </Modal>
   </Router>
 )

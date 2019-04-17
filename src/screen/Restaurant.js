@@ -5,7 +5,8 @@ import {
   StyleSheet,
   ScrollView,
   Animated,
-  Image
+  Image,
+  TouchableOpacity
 } from 'react-native'
 import {
   Tabs,
@@ -14,7 +15,7 @@ import {
   Content,
   Card,
   CardItem,
-  Icon
+  Icon,ScrollableTab
 } from 'native-base'
 import { Actions } from 'react-native-router-flux';
 
@@ -59,7 +60,7 @@ export default class Restaurant extends Component {
   tabBar = () => {
     return (
       <Container>
-        <Tabs onChangeTab={(i, ref, from) => this.filterMenu(i)}>
+        <Tabs onChangeTab={(i, ref, from) => this.filterMenu(i)} renderTabBar={()=><ScrollableTab/>}>
           {this.props.item.type.map((data, index) => (
             <Tab heading={data} key={data}>
               <Animated.ScrollView
@@ -70,6 +71,7 @@ export default class Restaurant extends Component {
               >
                 {this.state.filterMenu.map((item, index) => {
                   return (
+                    <TouchableOpacity onPress={()=>Actions.menu({menu:item})} key={index}>
                     <Card key={index}>
                       <CardItem cardBody>
                         <Image
@@ -81,9 +83,10 @@ export default class Restaurant extends Component {
                         <Text>{item.name}</Text>
                       </CardItem>
                     </Card>
+                    </TouchableOpacity>
                   )
                 })}
-                {this._renderScrollViewContent()}
+                {/* {this._renderScrollViewContent()} */}
               </Animated.ScrollView>
             </Tab>
           ))}
@@ -187,10 +190,7 @@ const styles = StyleSheet.create({
     height: HEADER_MAX_HEIGHT
   },
   tab: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    overflow: 'hidden'
+   flex:1
   },
   bar: {
     
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    right: 0
+    right: 0,
   },
   title: {
     backgroundColor: 'transparent',
