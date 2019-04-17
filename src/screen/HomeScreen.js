@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Image, Text, View,TouchableOpacity,FlatList} from 'react-native'
+import { StyleSheet, Image, Text, View,TouchableOpacity,FlatList,Button} from 'react-native'
 import firebaseService from '../environment/Firebase'
 import { Actions } from 'react-native-router-flux'
 import { Icon ,Card,CardItem,} from 'native-base';
@@ -35,7 +35,7 @@ export default class HomeScreen extends React.Component {
   signOutUser = async () => {
     try {
       firebaseService.auth().signOut()
-      Actions.reset('loading')
+      Actions.replace('loading')
     } catch (e) {
       console.log(e)
     }
@@ -102,9 +102,9 @@ export default class HomeScreen extends React.Component {
             style={{padding:10}}
           />
         </View>
-        {/* <Text>Hi {currentUser && currentUser.email}!</Text>
+        {/* <Text>Hi {currentUser && currentUser.email}!</Text> */}
         <Button title='LogOut' onPress={() => this.logout()} />
-        <Button title='Page2' onPress={()=>Actions.page2()}/> */}
+        {/* <Button title='Page2' onPress={()=>Actions.page2()}/> */}
       </View>
     )
   }

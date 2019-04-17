@@ -9,7 +9,7 @@ handleSignUp = () => {
   firebaseService
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then(() => Actions.reset('drawer'))
+      .then(() => Actions.replace('drawer'))
       .catch(error => this.setState({ errorMessage: error.message }))
 }
 render() {

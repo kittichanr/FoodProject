@@ -12,7 +12,7 @@ export default class Loading extends React.Component {
         Actions.replace('drawer')
         
       }else{
-        Actions.reset('signup')
+        Actions.replace('signup')
         
       } 
     })
