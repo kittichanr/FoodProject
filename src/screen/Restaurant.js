@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, ScrollView, Animated } from 'react-native'
-import {Tabs,Tab,Container, Content} from 'native-base'
+import { View, Text, StyleSheet, ScrollView, Animated,Image } from 'react-native'
+import {Tabs,Tab,Container, Content,Card,CardItem} from 'native-base'
 
 const HEADER_MAX_HEIGHT = 200
 const HEADER_MIN_HEIGHT = 60
@@ -11,16 +11,15 @@ export default class Restaurant extends Component {
     super(props)
     this.state = {
       scrollY: new Animated.Value(0),
-      typeMenu:[]
+      filterMenu:[]
+
     }
   }
 componentDidMount(){
-  console.log(Object.keys(this.props.item.Menu).length)
-  console.log(Object.keys(this.props.item.Menu)[1])
-  
-    this.setState({typeMenu:Object.keys(this.props.item.Menu)})
-  
-  
+    const initfilter = this.props.item.Menu.filter((item)=>{
+      return item.type == this.props.item.type[0]
+    })
+     this.setState({filterMenu:initfilter})
 }
   _renderScrollViewContent () {
   
@@ -36,8 +35,52 @@ componentDidMount(){
     )
   }
 
+  filterMenu(i) {
+   const data =  this.props.item.Menu.filter((item)=>{
+      return item.type == i.ref.props.heading
+    })
+    this.setState({filterMenu:data})
+  }
+
+  tabBar = () =>{
+    return(
+       <Container>
+        <Tabs  onChangeTab={(i,ref,from)=> this.filterMenu(i)}>
+        {this.props.item.type.map((data,index)=>(
+          <Tab heading={data} key={data} >
+         
+        <ScrollView
+          style={styles.fill}
+          scrollEventThrottle={4}
+          onScroll={Animated.event([
+            { nativeEvent: { contentOffset: { y: this.state.scrollY } } }
+          ])}
+        >
+              {this.state.filterMenu.map((item,index)=>{
+                return(
+                
+                  <Card key={index}>
+          <CardItem cardBody>
+            <Image source={{uri:item.img}} style={{width:'100%',height:150}}/>
+          </CardItem>
+          <CardItem >
+              <Text>{item.name}</Text>
+          </CardItem>
+        </Card>
+        
+                )
+              })}
+              {this._renderScrollViewContent()}
+              </ScrollView>
+          </Tab>
+         ))}
+         </Tabs>
+      </Container>
+    )
+  }
+
   render () {
-    console.log(this.state.typeMenu)
+    
    const tabY = this.state.scrollY.interpolate({
       inputRange: [0, HEADER_SCROLL_DISTANCE, HEADER_SCROLL_DISTANCE+ 1],
       outputRange: [0, 0, 1]
@@ -85,11 +128,16 @@ componentDidMount(){
             source={{uri:Img}}
           />
           <Animated.View style={styles.bar}>
-            <Text style={styles.title}>Title</Text>
+            <Text style={styles.title}>{Name}</Text>
           </Animated.View>
         </Animated.View>
-        <Animated.View style={[styles.tab, {top: tabHeight }]}>
-       <Container>
+        <Animated.View style={[styles.tab, {top: tabHeight }]}> 
+        
+       
+          {this.tabBar()}
+          
+       
+       {/* <Container>
         <Tabs >
           
           <Tab heading="1">
@@ -108,7 +156,7 @@ componentDidMount(){
         
           <Tab heading="2"></Tab>
         </Tabs>
-        </Container>
+        </Container> */}
         </Animated.View>
        
       </View>
