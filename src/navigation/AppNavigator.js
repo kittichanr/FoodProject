@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, BackHandler } from 'react-native'
 import { Icon } from 'native-base';
-import { Scene, Router, Stack, Actions, Drawer,Modal, } from 'react-native-router-flux'
+import { Scene, Router, Stack, Actions, Drawer,Modal } from 'react-native-router-flux'
 import Loading from '../screen/auth/Loading'
 import SignUp from '../screen/auth/SignUp'
 import Login from '../screen/auth/Login'
@@ -9,6 +9,7 @@ import HomeScreen from '../screen/HomeScreen'
 import Restaurant from '../screen/Restaurant'
 import MenuScreen from '../screen/MenuScreen'
 import DrawerMenu from '../component/DrawerMenu'
+import Cart from '../component/Cart'
 
 const _backAndroidHandler = () => {
   const scene = Actions.currentScene
@@ -26,7 +27,7 @@ const menuIcon = () => {
 }
 
 const shopIcon = () => {
-  return <Icon type='Feather' name='shopping-bag' style={{fontSize: 24,color:'black',paddingHorizontal: 5}} onPress={()=>{alert('555')}}/>
+  return <Icon type='Feather' name='shopping-bag' style={{fontSize: 24,color:'black',paddingHorizontal: 5}} onPress={()=>Actions.cart()}/>
 }
 
 
@@ -49,7 +50,8 @@ const AppNavigator = () => (
       </Drawer>  
     </Scene>
     <Scene key='restaurant' component={Restaurant} hideNavBar/>
-    <Scene key='menu' component={MenuScreen} hideNavBar/>
+    <Scene key='menu' component={MenuScreen} hideNavBar />
+    <Scene key='cart' component={Cart} hideNavBar/>
    </Modal>
   </Router>
 )
