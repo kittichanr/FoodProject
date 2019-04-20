@@ -50,7 +50,7 @@ const AppNavigator = () => (
       </Drawer>  
     </Scene>
     <Scene key='restaurant' component={Restaurant} hideNavBar/>
-    <Scene key='menu' component={MenuScreen} hideNavBar />
+    <Scene key='menu' component={MenuScreen} hideNavBar  />
     <Scene key='cart' component={Cart} hideNavBar/>
    </Modal>
   </Router>

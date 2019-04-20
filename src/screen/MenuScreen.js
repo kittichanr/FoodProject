@@ -11,19 +11,18 @@ import {
   TouchableOpacity,Dimensions,CheckBox
 } from 'react-native';
 import {
-  Tabs,
-  Tab,
-  Container,
-  Content,
+  
   Card,
   CardItem,
-  Icon,ScrollableTab
+  Icon,
+  Left,
+  Right
 } from 'native-base'
 import { Actions } from 'react-native-router-flux';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
+import RadioGroup from 'react-native-radio-buttons-group';
 
-
-const PARALLAX_HEADER_HEIGHT = 200
+const PARALLAX_HEADER_HEIGHT = 300
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -34,34 +33,33 @@ export default class App extends Component {
   }
 
   _renderScrollViewContent(menu) {
-    const data = Array.from({ length: 30 });
+    
     return (
       <View style={styles.scrollViewContent}>
       
-          <View style={styles.row}>
-            <Text style={styles.title}>Please Choose Your Meat <Text style={{color: 'deeppink'}}>(Select One)</Text></Text>
-          </View>
-          <View style={styles.subRow}>
-            <CheckBox style={{marginRight:20}}/>
-            <Text style={[styles.title,{color:"gray"}]}>Chicken</Text>
-          </View>
-          <View style={styles.subRow}>
-            <CheckBox style={{marginRight:20}}/>
-            <Text style={[styles.title,{color:"gray"}]}>Pork</Text>
-          </View>
-          <View style={styles.subRow}>
-            <CheckBox style={{marginRight:20}}/>
-            <Text style={[styles.title,{color:"gray"}]}>Meat</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.title}>Special Instruments</Text>
-          </View>
-          <View style={styles.subRow}>
-            <Text style={[styles.title,{color:"gray"}]}>Optional</Text>
-          </View>
-          <View style={styles.subRow}>
-            <Text style={[styles.title,{color:"gray"}]}>Optional</Text>
-          </View>
+      <Card>
+          <CardItem>
+            <Left>
+              <Text>{menu.name}</Text>
+            </Left>
+            <Right>
+              <Text>{menu.price} ฿</Text>
+            </Right>
+          </CardItem>
+        </Card>
+        <View style={styles.customize}>
+          <Text>Customize</Text>
+          <Text>{menu.customize.question} (Choose One)</Text>
+          {menu.customize.choice.map((item,index)=>{
+            
+            return(
+              <View style={{flexDirection:'row'}} key={index}>
+              
+              <Text key={index}>{item.item}</Text>
+              </View>
+            )
+          })}
+        </View>
       </View>
     );
   }
@@ -79,7 +77,7 @@ export default class App extends Component {
       parallaxHeaderHeight={PARALLAX_HEADER_HEIGHT}
       fadeOutForeground={true}
       renderStickyHeader={()=> (
-      <View key="sticky-header"  style={{ height: 150, justifyContent: 'flex-start',top:20}}>
+      <View key="sticky-header"  style={{ height: 200, justifyContent: 'flex-start',top:20}}>
       <Icon
               name='close'
               type='MaterialIcons'
@@ -89,13 +87,19 @@ export default class App extends Component {
                 marginRight: 5,
                 marginTop: 22,
               }}
-              onPress={()=>Actions.pop({ refresh: { num: true }})
+              onPress={()=>{Actions.pop()
+                setTimeout(() => {
+                  Actions.refresh({
+                  param : "555"
+                  });
+                  }, 0); 
+              }
               }
             />
       </View>
   )}
       renderForeground={() => (
-       <View style={{ height: 300, flex: 1, alignItems: 'center', justifyContent: 'center' ,}}>
+       <View style={{ height: 200, flex: 1, alignItems: 'center', justifyContent: 'center' ,}}>
           
         </View>
       )}
@@ -193,7 +197,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   scrollViewContent: {
-    
+    top:50,
     margin:10,
     backgroundColor: 'white',
   },
@@ -212,5 +216,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
+  customize:{
+    flex:1,
+    flexDirection:'column',
+    justifyContent:'flex-start',
+    marginLeft:10,
+  }
 });
 

@@ -23,7 +23,8 @@ import {
   Content,
   Card,
   CardItem,
-  Icon
+  Icon,
+  Right
 } from 'native-base'
 
 import { Actions } from 'react-native-router-flux'
@@ -56,11 +57,8 @@ export default class Restaurant extends Component {
   }
   
   componentWillReceiveProps(nextProps){
-    console.log(nextProps)
-    if(nextProps.test!==this.props.test){
-      console.log(nextProps.test)
-      
-    }
+    console.log(nextProps.param)
+   
   }
 
   componentDidMount () {
@@ -139,6 +137,9 @@ export default class Restaurant extends Component {
                       </CardItem>
                       <CardItem>
                         <Text>{item.name}</Text>
+                        <Right>
+                          <Text>{item.price} ฿</Text>
+                        </Right>
                       </CardItem>
                     </Card>
                     </TouchableOpacity>
@@ -153,16 +154,7 @@ export default class Restaurant extends Component {
   }
 
   render () {
-    console.log(this.props.num)
-    const tabContent = (
-      <List>{new Array(20).fill(null).map((_, i) => <Item
-        key={i}><Text>Item {i}</Text></Item>)}</List>)
-       const tabY = Animated.add(this.state.scrollY, this.headerY)
-       const tabHeight = this.state.scrollY.interpolate({
-        inputRange: [0, HEADER_SCROLL_DISTANCE],
-        outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
-        extrapolate: 'clamp'
-      })
+   
         const headerHeight = this.state.scrollY.interpolate({
           inputRange: [0, HEADER_SCROLL_DISTANCE],
           outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
