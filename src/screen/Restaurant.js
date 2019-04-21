@@ -48,7 +48,8 @@ export default class Restaurant extends Component {
     this.state = {
       scrollY: new Animated.Value(0),
       filterMenu: [],
-      isReady: false
+      isReady: false,
+      Allorder:[]
     }
     this.headerY = Animated.multiply(
       Animated.diffClamp(this.state.scrollY, 0, HEADER_SCROLL_DISTANCE),
@@ -57,7 +58,20 @@ export default class Restaurant extends Component {
   }
   
   componentWillReceiveProps(nextProps){
-    console.log(nextProps.order,nextProps.amount)
+    if(nextProps.amount > 0){
+      const i = this.state.Allorder.length+1
+      const arr = {
+        order:nextProps.order,
+        amount:nextProps.amount,
+        specialIns:nextProps.specialIns,
+        Menuname:nextProps.Menuname
+      }
+      this.setState({Allorder:[...this.state.Allorder,arr]})
+      // console.log(this.state.Allorder)
+      
+      // console.log(nextProps.order,nextProps.amount,nextProps.specialIns)
+    }
+    
    
   }
 
@@ -154,7 +168,7 @@ export default class Restaurant extends Component {
   }
 
   render () {
-   
+    console.log(this.state.Allorder)
         const headerHeight = this.state.scrollY.interpolate({
           inputRange: [0, HEADER_SCROLL_DISTANCE],
           outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],

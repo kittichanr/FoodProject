@@ -26,7 +26,8 @@ export default class App extends Component {
     this.state = {
       num: 0,
       data: undefined,
-      amount:0
+      amount:0,
+      specialIns:''
     }
   }
 
@@ -85,7 +86,11 @@ export default class App extends Component {
           </View>
           <Text>Special instructions</Text>
           <Form>
-            <Textarea rowSpan={5} bordered placeholder="Optional " />
+            <Textarea 
+            rowSpan={5} 
+            bordered 
+            placeholder="Optional " 
+            onChangeText={(value) => this.setState({ specialIns:value })}/>
           </Form>
           </View>
     }
@@ -130,8 +135,10 @@ export default class App extends Component {
                   Actions.pop()
                   setTimeout(() => {
                     Actions.refresh({
+                      Menuname:name,
                       order:this.state.data,
-                      amount:this.state.amount
+                      amount:this.state.amount,
+                      specialIns:this.state.specialIns
                     })
                   }, 0)
                 }}
