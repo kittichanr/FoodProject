@@ -12,11 +12,10 @@ import {
   Dimensions,
   CheckBox
 } from 'react-native'
-import { Card, CardItem, Icon, Left, Right } from 'native-base'
+import { Card, CardItem, Icon, Left, Right ,Textarea,Form} from 'native-base'
 import { Actions } from 'react-native-router-flux'
 import ParallaxScrollView from 'react-native-parallax-scroll-view'
-import RadioGroup from 'react-native-radio-button-group'
-
+import RNPickerSelect from 'react-native-picker-select';
 
 
 const PARALLAX_HEADER_HEIGHT = 300
@@ -26,22 +25,22 @@ export default class App extends Component {
 
     this.state = {
       num: 0,
-      selectedOption: null
+      data: undefined,
+      amount:0
     }
   }
 
   _renderScrollViewContent (menu) {
     var select = [];
+    if( menu.customize != undefined){
     menu.customize.choice.forEach((item,index)=>{
       select.push({
-        id:index , 
-        labelView: (
-        <Text key={index}>
-           {item.item}
-        </Text>
-      )},
+        label:`${item.item.toString()+'     price: '+item.price.toString()+' '+item.unit}`,
+        value:{item:item.item,price:item.price}
+       },
       )
     })
+  }
    
     return (
       <View style={styles.scrollViewContent}>
@@ -50,24 +49,56 @@ export default class App extends Component {
             <Left>
               <Text>{menu.name}</Text>
             </Left>
-            <Right>
-              <Text>{menu.price} ฿</Text>
-            </Right>
           </CardItem>
         </Card>
+    {menu.customize == undefined ? null :
+    <View>
         <View style={styles.customize}>
           <Text>Customize</Text>
           <Text>{menu.customize.question} (Choose One)</Text>
-          <View>
-          <RadioGroup
-            options={select}
-            
-            onChange={(option) => this.setState({selectedOption: option})}
-          />
-          </View>
         </View>
+    
+        <View style={{flex:1,paddingVertical: 50,paddingHorizontal: 10,}}>
+            <RNPickerSelect
+          placeholder={{
+            label: 'Select',
+            value: null,
+            color: '#9EA0A4',
+          }}
+          items={select}
+          onValueChange={value => {
+            this.setState({
+              data: value,
+            });
+          }}
+          value={this.state.data}
+          style={{fontSize: 16,
+            paddingHorizontal: 10,
+            paddingVertical: 8,
+            borderWidth: 0.5,
+            borderColor: 'eggplant',
+            borderRadius: 8,
+            color: 'black',
+            paddingRight: 30,}}
+          
+        />
+          </View>
+          <Text>Special instructions</Text>
+          <Form>
+            <Textarea rowSpan={5} bordered placeholder="Optional " />
+          </Form>
+          </View>
+    }
       </View>
+          
     )
+  }
+
+  decreaseValue=()=>{
+    if(this.state.num>0){
+      this.setState({ num: this.state.num - 1 })
+    }
+    
   }
 
   render () {
@@ -99,7 +130,8 @@ export default class App extends Component {
                   Actions.pop()
                   setTimeout(() => {
                     Actions.refresh({
-                      param: '555'
+                      order:this.state.data,
+                      amount:this.state.amount
                     })
                   }, 0)
                 }}
@@ -129,8 +161,9 @@ export default class App extends Component {
             </View>
           )}
         >
-          <View style={{ height: 500 }}>
+          <View style={{ height: 500,}}>
             {this._renderScrollViewContent(this.props.menu)}
+            
           </View>
         </ParallaxScrollView>
         <View
@@ -159,7 +192,7 @@ export default class App extends Component {
                 color: 'black',
                 fontSize: 40
               }}
-              onPress={() => this.setState({ num: num - 1 })}
+              onPress={() => this.decreaseValue()}
             />
             <Text style={styles.title}>{this.state.num}</Text>
             <Icon
@@ -169,7 +202,7 @@ export default class App extends Component {
                 color: 'black',
                 fontSize: 40
               }}
-              onPress={() => this.setState({ num: num + 1 })}
+              onPress={() => this.setState({ num: num + 1 }) }
             />
           </View>
           <View
@@ -179,7 +212,7 @@ export default class App extends Component {
               style={styles.SubmitButtonStyle}
               activeOpacity={0.5}
               onPress={() => {
-                alert('555')
+                this.setState({amount:this.state.num})
               }}
             >
               <Text style={styles.title2}>ADD TO CART</Text>

@@ -57,7 +57,7 @@ export default class Restaurant extends Component {
   }
   
   componentWillReceiveProps(nextProps){
-    console.log(nextProps.param)
+    console.log(nextProps.order,nextProps.amount)
    
   }
 
