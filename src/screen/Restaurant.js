@@ -217,7 +217,14 @@ export default class Restaurant extends Component {
                 fontSize: 24,
                 marginRight: 110,
               }}
-              onPress={()=>Actions.pop()}
+              onPress={() => {
+                  Actions.pop()
+                  setTimeout(() => {
+                    Actions.refresh({
+                      Allorder:this.state.Allorder
+                    })
+                  }, 0)
+                }}
             />
           </View>
             <Text style={styles.title}>{Name}</Text>

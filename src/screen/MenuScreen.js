@@ -133,14 +133,6 @@ export default class App extends Component {
                 }}
                 onPress={() => {
                   Actions.pop()
-                  setTimeout(() => {
-                    Actions.refresh({
-                      Menuname:name,
-                      order:this.state.data,
-                      amount:this.state.amount,
-                      specialIns:this.state.specialIns
-                    })
-                  }, 0)
                 }}
               />
             </View>
@@ -220,6 +212,15 @@ export default class App extends Component {
               activeOpacity={0.5}
               onPress={() => {
                 this.setState({amount:this.state.num})
+                Actions.pop()
+                  setTimeout(() => {
+                    Actions.refresh({
+                      Menuname:name,
+                      order:this.state.data,
+                      amount:this.state.amount,
+                      specialIns:this.state.specialIns
+                    })
+                  }, 0)
               }}
             >
               <Text style={styles.title2}>ADD TO CART</Text>

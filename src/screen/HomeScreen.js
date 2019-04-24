@@ -13,10 +13,21 @@ export default class HomeScreen extends React.Component {
       currentUser: null ,
       location: { coords: {latitude: 0, longitude: 0}},
       result:'',
-      items:[]
+      items:[],      
+      Allorder:[]
     }
   }
+
+  _renderRightButton = () => {
+    return(
+            <Icon type='Feather' name='shopping-bag' style={{fontSize: 24,color:'black',paddingHorizontal: 5}} onPress={()=>Actions.push('cart',{Allorder:this.state.Allorder})}/>
+        
+    );
+};
+
   componentWillMount(){
+    this.props.navigation.setParams({ 
+      right: this._renderRightButton });
     firebaseService.database().ref(`/Restaurant`).once(
       'value', (snapshot) => {
         let data = snapshot.val();
@@ -28,7 +39,10 @@ export default class HomeScreen extends React.Component {
   componentDidMount () {
     const { currentUser } = firebaseService.auth()
     this.setState({ currentUser })
-
+  }
+  
+  componentWillReceiveProps(nextProps){
+      this.setState({Allorder:nextProps.Allorder})
     
   }
 

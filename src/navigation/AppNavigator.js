@@ -46,12 +46,12 @@ const AppNavigator = () => (
               drawerWidth={300}
               
               >
-        <Scene key='home' component={HomeScreen} title="Home" renderRightButton={shopIcon}/>
+        <Scene key='home' component={HomeScreen} title="Home" />
       </Drawer>  
     </Scene>
     <Scene key='restaurant' component={Restaurant} hideNavBar/>
     <Scene key='menu' component={MenuScreen} hideNavBar  />
-    <Scene key='cart' component={Cart} hideNavBar/>
+    <Scene key='cart' component={Cart} title="Cart"/>
    </Modal>
   </Router>
 )
