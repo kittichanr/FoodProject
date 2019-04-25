@@ -61,7 +61,7 @@ export default class Cart extends Component {
     const order = this.props.Allorder
     return (
       <View  style={{ flex: 1}}>
-        {console.log(order)}
+        {/* {console.log(order)} */}
         {this.test(order)}
       </View>
     );

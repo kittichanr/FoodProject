@@ -42,7 +42,16 @@ export default class HomeScreen extends React.Component {
   }
   
   componentWillReceiveProps(nextProps){
-      this.setState({Allorder:nextProps.Allorder})
+    if(this.state.Allorder[0] == undefined){
+      this.state.Allorder.splice(0,1)
+    }
+    if(nextProps.Allorder !== undefined){
+      for(var i = 0 ; i< nextProps.Allorder.length;i++){
+      this.setState({Allorder:[...this.state.Allorder,nextProps.Allorder[i]]})
+    }
+    }
+    
+    
     
   }
 
@@ -77,7 +86,7 @@ export default class HomeScreen extends React.Component {
     } catch (e) {
       this.setState({ error: e });
     } 
-    console.log(this.state.result)
+    // console.log(this.state.result)
   }
 
   renderItem = ({item}) =>{
@@ -98,6 +107,8 @@ export default class HomeScreen extends React.Component {
 
 
   render () {
+    // console.log("Allorder",this.state.Allorder)
+    
     const { currentUser,result } = this.state
     return (
       <View style={styles.container}>
