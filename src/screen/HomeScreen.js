@@ -107,7 +107,7 @@ export default class HomeScreen extends React.Component {
 
 
   render () {
-    // console.log("Allorder",this.state.Allorder)
+    console.log("Allorder home",this.state.Allorder)
     
     const { currentUser,result } = this.state
     return (
