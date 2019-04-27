@@ -42,13 +42,16 @@ export default class HomeScreen extends React.Component {
   }
   
   componentWillReceiveProps(nextProps){
-    if(this.state.Allorder[0] == undefined){
-      this.state.Allorder.splice(0,1)
-    }
+    
+    
     if(nextProps.Allorder !== undefined){
-      for(var i = 0 ; i< nextProps.Allorder.length;i++){
-      this.setState({Allorder:[...this.state.Allorder,nextProps.Allorder[i]]})
-    }
+      if(this.state.Allorder[0] == undefined){
+        this.state.Allorder.splice(0,1)
+      }
+      // console.log(nextProps.Allorder)
+      // for(var i = 0 ; i< nextProps.Allorder.length;i++){
+      this.setState({Allorder:this.state.Allorder.concat(nextProps.Allorder)})
+    // }
     }
     
     
