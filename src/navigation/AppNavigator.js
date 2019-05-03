@@ -51,7 +51,7 @@ const AppNavigator = () => (
     </Scene>
     <Scene key='restaurant' component={Restaurant} hideNavBar/>
     <Scene key='menu' component={MenuScreen} hideNavBar  />
-    <Scene key='cart' component={Cart} title="Cart"/>
+    <Scene key='cart' component={Cart} title="Cart" back={true}/>
    </Modal>
   </Router>
 )

@@ -1,16 +1,12 @@
 import React, { Component } from 'react'
 import {
-  Animated,
-  Platform,
-  StatusBar,
+  AsyncStorage,
   StyleSheet,
   Text,
   View,
   Image,
-  RefreshControl,
   TouchableOpacity,
-  Dimensions,
-  CheckBox
+  
 } from 'react-native'
 import { Card, CardItem, Icon, Left, Right ,Textarea,Form} from 'native-base'
 import { Actions } from 'react-native-router-flux'
@@ -24,13 +20,12 @@ export default class App extends Component {
     super(props)
 
     this.state = {
-      num: 0,
       data: undefined,
       amount:0,
-      specialIns:''
+      specialIns:'',
+      Allorder:[]
     }
   }
-
   _renderScrollViewContent (menu) {
     var select = [];
     if( menu.customize != undefined){
@@ -42,7 +37,6 @@ export default class App extends Component {
       )
     })
   }
-   
     return (
       <View style={styles.scrollViewContent}>
         <Card>
@@ -100,15 +94,37 @@ export default class App extends Component {
   }
 
   decreaseValue=()=>{
-    if(this.state.num>0){
-      this.setState({ num: this.state.num - 1 })
+    if(this.state.amount>0){
+      this.setState({ amount: this.state.amount - 1 })
     }
-    
+  }
+
+  // save Order to AsynStorage
+  saveMenu = async() =>{
+    const {name,id} = this.props.menu
+    const {data,amount,specialIns} = this.state
+    const obj = {Menuname:name,order:data,amount:amount,specialIns:specialIns}
+    try {
+      if(amount > 0 && data != undefined){
+         const item = await AsyncStorage.getItem('Order') ;
+      let order = JSON.parse(item);
+      // if(order != []){
+      //   order = []
+      // }
+      order.push(obj)
+      console.log(order)
+      await AsyncStorage.setItem('Order',JSON.stringify(order))
+      alert('saved successfully.')
+      Actions.pop();
+      }
+    } catch (error) {
+      console.log(error.message) ;
+    }
   }
 
   render () {
     const { img, name, price } = this.props.menu
-    const { num } = this.state
+    const { amount } = this.state
     return (
       <View style={styles.container}>
         <ParallaxScrollView
@@ -193,7 +209,7 @@ export default class App extends Component {
               }}
               onPress={() => this.decreaseValue()}
             />
-            <Text style={styles.title}>{this.state.num}</Text>
+            <Text style={styles.title}>{this.state.amount}</Text>
             <Icon
               name='control-point'
               type='MaterialIcons'
@@ -201,7 +217,7 @@ export default class App extends Component {
                 color: 'black',
                 fontSize: 40
               }}
-              onPress={() => this.setState({ num: num + 1 }) }
+              onPress={() => this.setState({ amount: amount + 1 }) }
             />
           </View>
           <View
@@ -211,16 +227,16 @@ export default class App extends Component {
               style={styles.SubmitButtonStyle}
               activeOpacity={0.5}
               onPress={() => {
-                this.setState({amount:this.state.num})
-                Actions.pop()
-                  setTimeout(() => {
-                    Actions.refresh({
-                      Menuname:name,
-                      order:this.state.data,
-                      amount:this.state.amount,
-                      specialIns:this.state.specialIns
-                    })
-                  }, 0)
+                this.saveMenu();
+                // Actions.pop();
+                  // setTimeout(() => {
+                  //   Actions.refresh({
+                  //     Menuname:name,
+                  //     order:this.state.data,
+                  //     amount:this.state.amount,
+                  //     specialIns:this.state.specialIns
+                  //   })
+                  // }, 0)
               }}
             >
               <Text style={styles.title2}>ADD TO CART</Text>

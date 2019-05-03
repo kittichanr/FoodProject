@@ -41,22 +41,17 @@ export default class HomeScreen extends React.Component {
     this.setState({ currentUser })
   }
   
-  componentWillReceiveProps(nextProps){
-    
-    
-    if(nextProps.Allorder !== undefined){
-      if(this.state.Allorder[0] == undefined){
-        this.state.Allorder.splice(0,1)
-      }
-      // console.log(nextProps.Allorder)
-      // for(var i = 0 ; i< nextProps.Allorder.length;i++){
-      this.setState({Allorder:this.state.Allorder.concat(nextProps.Allorder)})
-    // }
-    }
-    
-    
-    
-  }
+  // componentWillReceiveProps(nextProps){
+  //   if(nextProps.Allorder !== undefined){
+  //     if(this.state.Allorder[0] == undefined){
+  //       this.state.Allorder.splice(0,1)
+  //     }
+  //     // console.log(nextProps.Allorder)
+  //     // for(var i = 0 ; i< nextProps.Allorder.length;i++){
+  //     this.setState({Allorder:this.state.Allorder.concat(nextProps.Allorder)})
+  //   // }
+  //   }
+  // }
 
   signOutUser = async () => {
     try {
@@ -110,7 +105,7 @@ export default class HomeScreen extends React.Component {
 
 
   render () {
-    console.log("Allorder home",this.state.Allorder)
+    // console.log("Allorder home",this.state.Allorder)
     
     const { currentUser,result } = this.state
     return (
