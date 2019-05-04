@@ -107,7 +107,8 @@ export default class App extends Component {
     try {
       if(amount > 0 && data != undefined){
          const item = await AsyncStorage.getItem('Order') ;
-      let order = JSON.parse(item);
+      let order = []
+      order = JSON.parse(item);
       // if(order != []){
       //   order = []
       // }

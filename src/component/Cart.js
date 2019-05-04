@@ -17,7 +17,8 @@ import {
   Card,
   CardItem,
   Icon,
-  Right
+  Right,
+  Footer
 } from 'native-base'
 import { Actions } from 'react-native-router-flux'
 export default class Cart extends Component {
@@ -41,7 +42,6 @@ export default class Cart extends Component {
   // Save current order when back
   saveItem = async () => {
     await AsyncStorage.setItem('Order', JSON.stringify(this.state.Allorder))
-    Actions.pop()
   }
 
   // Load Order from AsynStorage
@@ -49,10 +49,22 @@ export default class Cart extends Component {
     try {
       const item = await AsyncStorage.getItem('Order')
       const order = JSON.parse(item)
+      if(order!=null){
       this.setState({ Allorder: order })
+      }else{
+        this.setState({ Allorder: [] })
+      }
+      
     } catch (error) {
       console.log(error.message)
     }
+  }
+
+  checkOut = async () => {
+    // await AsyncStorage.setItem('History', JSON.stringify(this.state.Allorder))
+    await AsyncStorage.removeItem('Order');
+    alert("Check Out Success")
+    Actions.pop()
   }
 
   // Decrease value each item
@@ -74,16 +86,24 @@ export default class Cart extends Component {
     this.setState({ Allorder: Allorder })
   }
 
+  remove = index => {
+    const Allorder = [...this.state.Allorder]
+    Allorder.splice(index, 1)
+    this.setState({ Allorder: Allorder })
+    this.saveItem()
+  }
+
   renderItem = ({ item, index }) => {
     let amountItem = item.amount
     const amountPrice = amountItem * item.order.price
 
     return (
       <CardItem>
-        <Left>
+        <Left style={{flexDirection:"column"}}>
           <Text>{item.Menuname}</Text>
+          <Text style={{textAlign: 'left'}}>({item.order.item})</Text>
         </Left>
-        <Body>
+        <Body style={{flexDirection:"row"}}>
           <Icon
             name='remove-circle-outline'
             type='MaterialIcons'
@@ -106,6 +126,26 @@ export default class Cart extends Component {
         </Body>
         <Right>
           <Text>{amountPrice} ฿</Text>
+        </Right>
+        <Right >
+          <TouchableOpacity
+              style={{height: 30,
+                      width: 60,
+                      backgroundColor: 'grey',
+                      borderRadius: 10,
+                      borderWidth: 1,
+                      textAlign: 'center',
+                      justifyContent: 'center',
+                      borderColor: '#fff',
+                      marginLeft:5}}
+              activeOpacity={0.5}
+              onPress={() => {
+                this.remove(index);
+                Actions.pop()
+              }}
+            >
+              <Text style={{color:'#fff', fontSize: 10,textAlign: 'center',}}>REMOVE</Text>
+            </TouchableOpacity>
         </Right>
       </CardItem>
     )
@@ -153,12 +193,14 @@ export default class Cart extends Component {
             <Right>
               <Text>Price </Text>
             </Right>
+              <Right >
+              </Right>
           </CardItem>
           <FlatList
             data={order}
             renderItem={this.renderItem}
             keyExtractor={(item, index) => index.toString()}
-            style={{ padding: 10, marginTop: 30 }}
+            style={{ marginTop: 30 }}
           />
           <CardItem style={{ fontWeight: 'bold' }} bordered>
             <Left>
@@ -166,10 +208,37 @@ export default class Cart extends Component {
             </Left>
             <Body />
             <Right>
-              <Text>{sum}</Text>
+              <Text>{sum} ฿</Text>
+            </Right>
+            <Right>
             </Right>
           </CardItem>
         </Card>
+        <View style={{position: 'absolute', left: 0, right: 0, bottom: 0,backgroundColor: 'white',
+            height: 60,
+            justifyContent: 'space-around',
+            borderColor: 'black',
+            borderWidth: 1,
+            padding: 5,
+            flexDirection: 'row'}}>
+        <TouchableOpacity
+              style={{height: 40,
+                      width: 150,
+                      backgroundColor: 'green',
+                      borderRadius: 10,
+                      borderWidth: 1,
+                      textAlign: 'center',
+                      justifyContent: 'center',
+                      borderColor: '#fff',
+                      marginLeft:5}}
+              activeOpacity={0.5}
+              onPress={() => {
+                this.checkOut()
+              }}
+            >
+              <Text style={{color:'#fff', fontSize: 20,textAlign: 'center',}}>Check out</Text>
+            </TouchableOpacity>
+        </View>
       </View>
     )
   }
