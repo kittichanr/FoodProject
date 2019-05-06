@@ -138,7 +138,7 @@ export default class Restaurant extends Component {
             <Tab heading={data} key={data}>
               {this.state.filterMenu.map((item, index) => {
                   return (
-                    <TouchableOpacity onPress={()=>Actions.menu({menu:item})} key={index}>
+                    <TouchableOpacity onPress={()=>Actions.menu({menu:item,restaurantName:this.props.item.Name})} key={index}>
                     <Card key={index}>
                       <CardItem cardBody>
                         <Image

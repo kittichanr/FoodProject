@@ -42,6 +42,7 @@ export default class Cart extends Component {
   // Save current order when back
   saveItem = async () => {
     await AsyncStorage.setItem('Order', JSON.stringify(this.state.Allorder))
+    Actions.pop()
   }
 
   // Load Order from AsynStorage
@@ -49,12 +50,11 @@ export default class Cart extends Component {
     try {
       const item = await AsyncStorage.getItem('Order')
       const order = JSON.parse(item)
-      if(order!=null){
-      this.setState({ Allorder: order })
-      }else{
+      if (order != null) {
+        this.setState({ Allorder: order })
+      } else {
         this.setState({ Allorder: [] })
       }
-      
     } catch (error) {
       console.log(error.message)
     }
@@ -62,8 +62,9 @@ export default class Cart extends Component {
 
   checkOut = async () => {
     // await AsyncStorage.setItem('History', JSON.stringify(this.state.Allorder))
-    await AsyncStorage.removeItem('Order');
-    alert("Check Out Success")
+    // add to firebase Order and restaurantNAme //
+    await AsyncStorage.removeItem('Order')
+    alert('Check Out Success')
     Actions.pop()
   }
 
@@ -79,7 +80,7 @@ export default class Cart extends Component {
     }
   }
 
-  //Increase value each item
+  // Increase value each item
   increaseValue = index => {
     const Allorder = [...this.state.Allorder]
     Allorder[index].amount += 1
@@ -90,7 +91,7 @@ export default class Cart extends Component {
     const Allorder = [...this.state.Allorder]
     Allorder.splice(index, 1)
     this.setState({ Allorder: Allorder })
-    this.saveItem()
+    // this.saveItem()
   }
 
   renderItem = ({ item, index }) => {
@@ -99,11 +100,11 @@ export default class Cart extends Component {
 
     return (
       <CardItem>
-        <Left style={{flexDirection:"column"}}>
+        <Left style={{ flexDirection: 'column' }}>
           <Text>{item.Menuname}</Text>
-          <Text style={{textAlign: 'left'}}>({item.order.item})</Text>
+          <Text style={{ textAlign: 'left' }}>({item.order.item})</Text>
         </Left>
-        <Body style={{flexDirection:"row"}}>
+        <Body style={{ flexDirection: 'row' }}>
           <Icon
             name='remove-circle-outline'
             type='MaterialIcons'
@@ -127,25 +128,28 @@ export default class Cart extends Component {
         <Right>
           <Text>{amountPrice} ฿</Text>
         </Right>
-        <Right >
+        <Right>
           <TouchableOpacity
-              style={{height: 30,
-                      width: 60,
-                      backgroundColor: 'grey',
-                      borderRadius: 10,
-                      borderWidth: 1,
-                      textAlign: 'center',
-                      justifyContent: 'center',
-                      borderColor: '#fff',
-                      marginLeft:5}}
-              activeOpacity={0.5}
-              onPress={() => {
-                this.remove(index);
-                Actions.pop()
-              }}
-            >
-              <Text style={{color:'#fff', fontSize: 10,textAlign: 'center',}}>REMOVE</Text>
-            </TouchableOpacity>
+            style={{
+              height: 30,
+              width: 60,
+              backgroundColor: 'grey',
+              borderRadius: 10,
+              borderWidth: 1,
+              textAlign: 'center',
+              justifyContent: 'center',
+              borderColor: '#fff',
+              marginLeft: 5
+            }}
+            activeOpacity={0.5}
+            onPress={() => {
+              this.remove(index)
+            }}
+          >
+            <Text style={{ color: '#fff', fontSize: 10, textAlign: 'center' }}>
+              REMOVE
+            </Text>
+          </TouchableOpacity>
         </Right>
       </CardItem>
     )
@@ -157,6 +161,7 @@ export default class Cart extends Component {
       sum += order[i].amount * order[i].order.price
     }
     if (order.length == 0) {
+      AsyncStorage.setItem('restaurantName', '')
       return (
         <View
           style={{
@@ -193,8 +198,7 @@ export default class Cart extends Component {
             <Right>
               <Text>Price </Text>
             </Right>
-              <Right >
-              </Right>
+            <Right />
           </CardItem>
           <FlatList
             data={order}
@@ -210,34 +214,45 @@ export default class Cart extends Component {
             <Right>
               <Text>{sum} ฿</Text>
             </Right>
-            <Right>
-            </Right>
+            <Right />
           </CardItem>
         </Card>
-        <View style={{position: 'absolute', left: 0, right: 0, bottom: 0,backgroundColor: 'white',
+        <View
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'white',
             height: 60,
             justifyContent: 'space-around',
             borderColor: 'black',
             borderWidth: 1,
             padding: 5,
-            flexDirection: 'row'}}>
-        <TouchableOpacity
-              style={{height: 40,
-                      width: 150,
-                      backgroundColor: 'green',
-                      borderRadius: 10,
-                      borderWidth: 1,
-                      textAlign: 'center',
-                      justifyContent: 'center',
-                      borderColor: '#fff',
-                      marginLeft:5}}
-              activeOpacity={0.5}
-              onPress={() => {
-                this.checkOut()
-              }}
-            >
-              <Text style={{color:'#fff', fontSize: 20,textAlign: 'center',}}>Check out</Text>
-            </TouchableOpacity>
+            flexDirection: 'row'
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              height: 40,
+              width: 150,
+              backgroundColor: 'green',
+              borderRadius: 10,
+              borderWidth: 1,
+              textAlign: 'center',
+              justifyContent: 'center',
+              borderColor: '#fff',
+              marginLeft: 5
+            }}
+            activeOpacity={0.5}
+            onPress={() => {
+              this.checkOut()
+            }}
+          >
+            <Text style={{ color: '#fff', fontSize: 20, textAlign: 'center' }}>
+              Check out
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     )

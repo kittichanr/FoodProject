@@ -23,8 +23,19 @@ export default class App extends Component {
       data: undefined,
       amount:0,
       specialIns:'',
-      Allorder:[]
+      Allorder:[],
+      resName:''
     }
+  }
+
+  componentWillMount(){
+    this._load()
+  }
+
+  _load = async() =>{
+    const resName = await AsyncStorage.getItem('restaurantName') ;
+    this.setState({resName:resName})
+    console.log(this.state.resName)
   }
   _renderScrollViewContent (menu) {
     var select = [];
@@ -101,26 +112,36 @@ export default class App extends Component {
 
   // save Order to AsynStorage
   saveMenu = async() =>{
+    let order = []
     const {name,id} = this.props.menu
     const {data,amount,specialIns} = this.state
     const obj = {Menuname:name,order:data,amount:amount,specialIns:specialIns}
+    
+    if(this.state.resName == this.props.restaurantName || this.state.resName == null){
     try {
       if(amount > 0 && data != undefined){
-         const item = await AsyncStorage.getItem('Order') ;
-      let order = []
-      order = JSON.parse(item);
-      // if(order != []){
-      //   order = []
-      // }
-      order.push(obj)
-      console.log(order)
-      await AsyncStorage.setItem('Order',JSON.stringify(order))
-      alert('saved successfully.')
-      Actions.pop();
+        const item = await AsyncStorage.getItem('Order') ;
+        order = JSON.parse(item);
+        // if(order != []){
+        //   order = []
+        // }
+        order.push(obj)
+        console.log(order)
+        await AsyncStorage.setItem('Order',JSON.stringify(order))
+        await AsyncStorage.setItem('restaurantName',this.props.restaurantName )
+        alert('saved successfully.')
+        Actions.pop();
       }
     } catch (error) {
       console.log(error.message) ;
     }
+  }
+  else{
+    alert('Different restaurant')
+    await AsyncStorage.setItem('Order',JSON.stringify([obj]))
+    await AsyncStorage.setItem('restaurantName',this.props.restaurantName );
+    Actions.pop();
+  }
   }
 
   render () {
