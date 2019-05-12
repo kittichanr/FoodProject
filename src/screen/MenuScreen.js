@@ -6,48 +6,44 @@ import {
   View,
   Image,
   TouchableOpacity,
-  
+
 } from 'react-native'
-import { Card, CardItem, Icon, Left, Right ,Textarea,Form} from 'native-base'
-import { Actions } from 'react-native-router-flux'
-import ParallaxScrollView from 'react-native-parallax-scroll-view'
+import { Card, CardItem, Icon, Left, Right, Textarea, Form } from 'native-base';
+import { Actions } from 'react-native-router-flux';
+import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import RNPickerSelect from 'react-native-picker-select';
+import { connect } from 'react-redux';
+import { addOrder } from '../actions/Menu'
 
-
-const PARALLAX_HEADER_HEIGHT = 300
-export default class App extends Component {
-  constructor (props) {
+const PARALLAX_HEADER_HEIGHT = 300;
+class MenuScreen extends Component {
+  constructor(props) {
     super(props)
 
     this.state = {
       data: undefined,
-      amount:0,
-      specialIns:'',
-      Allorder:[],
-      resName:''
+      amount: 0,
+      specialIns: '',
+      Allorder: [],
+      resName: ''
     }
   }
 
-  componentWillMount(){
-    this._load()
+  componentWillMount() {
+    
   }
 
-  _load = async() =>{
-    const resName = await AsyncStorage.getItem('restaurantName') ;
-    this.setState({resName:resName})
-    console.log(this.state.resName)
-  }
-  _renderScrollViewContent (menu) {
+  _renderScrollViewContent(menu) {
     var select = [];
-    if( menu.customize != undefined){
-    menu.customize.choice.forEach((item,index)=>{
-      select.push({
-        label:`${item.item.toString()+'     price: '+item.price.toString()+' '+item.unit}`,
-        value:{item:item.item,price:item.price}
-       },
-      )
-    })
-  }
+    if (menu.customize != undefined) {
+      menu.customize.choice.forEach((item, index) => {
+        select.push({
+          label: `${item.item.toString() + '     price: ' + item.price.toString() + ' ' + item.unit}`,
+          value: { item: item.item, price: item.price }
+        }
+        );
+      });
+    }
     return (
       <View style={styles.scrollViewContent}>
         <Card>
@@ -57,94 +53,76 @@ export default class App extends Component {
             </Left>
           </CardItem>
         </Card>
-    {menu.customize == undefined ? null :
-    <View>
-        <View style={styles.customize}>
-          <Text>Customize</Text>
-          <Text>{menu.customize.question} (Choose One)</Text>
-        </View>
-    
-        <View style={{flex:1,paddingVertical: 50,paddingHorizontal: 10,}}>
-            <RNPickerSelect
-          placeholder={{
-            label: 'Select',
-            value: null,
-            color: '#9EA0A4',
-          }}
-          items={select}
-          onValueChange={value => {
-            this.setState({
-              data: value,
-            });
-          }}
-          value={this.state.data}
-          style={{fontSize: 16,
-            paddingHorizontal: 10,
-            paddingVertical: 8,
-            borderWidth: 0.5,
-            borderColor: 'eggplant',
-            borderRadius: 8,
-            color: 'black',
-            paddingRight: 30,}}
-          
-        />
+        {menu.customize == undefined ? null :
+          <View>
+            <View style={styles.customize}>
+              <Text>Customize</Text>
+              <Text>{menu.customize.question} (Choose One)</Text>
+            </View>
+
+            <View style={{ flex: 1, paddingVertical: 50, paddingHorizontal: 10, }}>
+              <RNPickerSelect
+                placeholder={{
+                  label: 'Select',
+                  value: null,
+                  color: '#9EA0A4',
+                }}
+                items={select}
+                onValueChange={value => {
+                  this.setState({
+                    data: value,
+                  });
+                }}
+                value={this.state.data}
+                style={{
+                  fontSize: 16,
+                  paddingHorizontal: 10,
+                  paddingVertical: 8,
+                  borderWidth: 0.5,
+                  borderColor: 'eggplant',
+                  borderRadius: 8,
+                  color: 'black',
+                  paddingRight: 30,
+                }}
+
+              />
+            </View>
+            <Text>Special instructions</Text>
+            <Form>
+              <Textarea
+                rowSpan={5}
+                bordered
+                placeholder="Optional "
+                onChangeText={(value) => this.setState({ specialIns: value })} />
+            </Form>
           </View>
-          <Text>Special instructions</Text>
-          <Form>
-            <Textarea 
-            rowSpan={5} 
-            bordered 
-            placeholder="Optional " 
-            onChangeText={(value) => this.setState({ specialIns:value })}/>
-          </Form>
-          </View>
-    }
+        }
       </View>
-          
+
     )
   }
 
-  decreaseValue=()=>{
-    if(this.state.amount>0){
+  decreaseValue = () => {
+    if (this.state.amount > 0) {
       this.setState({ amount: this.state.amount - 1 })
     }
   }
 
-  // save Order to AsynStorage
-  saveMenu = async() =>{
-    let order = []
-    const {name,id} = this.props.menu
-    const {data,amount,specialIns} = this.state
-    const obj = {Menuname:name,order:data,amount:amount,specialIns:specialIns}
-    
-    if(this.state.resName == this.props.restaurantName || this.state.resName == null){
-    try {
-      if(amount > 0 && data != undefined){
-        const item = await AsyncStorage.getItem('Order') ;
-        order = JSON.parse(item);
-        // if(order != []){
-        //   order = []
-        // }
-        order.push(obj)
-        console.log(order)
-        await AsyncStorage.setItem('Order',JSON.stringify(order))
-        await AsyncStorage.setItem('restaurantName',this.props.restaurantName )
-        alert('saved successfully.')
-        Actions.pop();
-      }
-    } catch (error) {
-      console.log(error.message) ;
-    }
-  }
-  else{
-    alert('Different restaurant')
-    await AsyncStorage.setItem('Order',JSON.stringify([obj]))
-    await AsyncStorage.setItem('restaurantName',this.props.restaurantName );
+
+  addOrder = () => {
+    const { name, id } = this.props.menu
+    const { data, amount, specialIns } = this.state
+    const obj = { Menuname: name, order: data, amount: amount, specialIns: specialIns }
+  if(amount > 0 && data != undefined){
+    this.props.addOrder(obj);
+    alert('Add Order');
     Actions.pop();
   }
+    
+
   }
 
-  render () {
+  render() {
     const { img, name, price } = this.props.menu
     const { amount } = this.state
     return (
@@ -198,9 +176,9 @@ export default class App extends Component {
             </View>
           )}
         >
-          <View style={{ height: 500,}}>
+          <View style={{ height: 500, }}>
             {this._renderScrollViewContent(this.props.menu)}
-            
+
           </View>
         </ParallaxScrollView>
         <View
@@ -239,7 +217,7 @@ export default class App extends Component {
                 color: 'black',
                 fontSize: 40
               }}
-              onPress={() => this.setState({ amount: amount + 1 }) }
+              onPress={() => this.setState({ amount: amount + 1 })}
             />
           </View>
           <View
@@ -249,16 +227,7 @@ export default class App extends Component {
               style={styles.SubmitButtonStyle}
               activeOpacity={0.5}
               onPress={() => {
-                this.saveMenu();
-                // Actions.pop();
-                  // setTimeout(() => {
-                  //   Actions.refresh({
-                  //     Menuname:name,
-                  //     order:this.state.data,
-                  //     amount:this.state.amount,
-                  //     specialIns:this.state.specialIns
-                  //   })
-                  // }, 0)
+                this.addOrder();
               }}
             >
               <Text style={styles.title2}>ADD TO CART</Text>
@@ -320,3 +289,16 @@ const styles = StyleSheet.create({
     marginLeft: 10
   }
 })
+
+const mapStateToProps = state => ({
+  order: state.menu.order
+})
+
+const mapDispatchToProps = dispatch => ({
+
+  addOrder: (order) => {
+    dispatch(addOrder(order))
+  }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(MenuScreen)

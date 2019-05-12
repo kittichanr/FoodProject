@@ -1,15 +1,19 @@
-import React, { Component } from 'react'
-import { Text, View, BackHandler } from 'react-native'
+import React, { Component } from 'react';
+import { Text, View, BackHandler } from 'react-native';
 import { Icon } from 'native-base';
-import { Scene, Router, Stack, Actions, Drawer,Modal } from 'react-native-router-flux'
-import Loading from '../screen/auth/Loading'
-import SignUp from '../screen/auth/SignUp'
-import Login from '../screen/auth/Login'
-import HomeScreen from '../screen/HomeScreen'
-import Restaurant from '../screen/Restaurant'
-import MenuScreen from '../screen/MenuScreen'
-import DrawerMenu from '../component/DrawerMenu'
-import Cart from '../component/Cart'
+import { Scene, Router, Stack, Actions, Drawer,Modal } from 'react-native-router-flux';
+import Loading from '../screen/auth/Loading';
+import SignUp from '../screen/auth/SignUp';
+import Login from '../screen/auth/Login';
+import HomeScreen from '../screen/HomeScreen';
+import Restaurant from '../screen/Restaurant';
+import MenuScreen from '../screen/MenuScreen';
+import DrawerMenu from '../component/DrawerMenu';
+import Cart from '../component/Cart';
+
+import {Provider} from 'react-redux';
+import configureStore from '../store/store';
+import {RouterRedux} from './RouterRedux'
 
 const _backAndroidHandler = () => {
   const scene = Actions.currentScene
@@ -31,9 +35,12 @@ const shopIcon = () => {
 }
 
 
-
-const AppNavigator = () => (
-  <Router backAndroidHandler={_backAndroidHandler}>
+const store = configureStore();
+export class AppNavigator extends React.Component{
+  render() {
+    return (
+  <Provider store={store}>
+  <RouterRedux backAndroidHandler={_backAndroidHandler}>
   <Modal >
     <Scene key='root' hideNavBar={true}>
       <Scene key='loading' component={Loading} hideNavBar initial/>
@@ -53,6 +60,9 @@ const AppNavigator = () => (
     <Scene key='menu' component={MenuScreen} hideNavBar  />
     <Scene key='cart' component={Cart} title="Cart" back={true}/>
    </Modal>
-  </Router>
-)
-export default AppNavigator
+  </RouterRedux>
+  </Provider>
+    )
+  }
+}
+

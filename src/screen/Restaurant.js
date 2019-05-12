@@ -28,7 +28,7 @@ import {
 } from 'native-base'
 
 import { Actions } from 'react-native-router-flux'
-
+import { connect } from 'react-redux';
 
 const HEADER_MAX_HEIGHT = 200
 const HEADER_MIN_HEIGHT = 60
@@ -42,7 +42,7 @@ const TAB_PROPS = {
   activeTextStyle: { color: 'white' }
 }
 
-export default class Restaurant extends Component {
+class Restaurant extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -57,24 +57,8 @@ export default class Restaurant extends Component {
     )
   }
   
-  // componentWillReceiveProps(nextProps){
-  //   if(nextProps.amount > 0){
-  //     const i = this.state.Allorder.length+1
-  //     const arr = {
-  //       order:nextProps.order,
-  //       amount:nextProps.amount,
-  //       specialIns:nextProps.specialIns,
-  //       Menuname:nextProps.Menuname
-  //     }
-  //     this.setState({Allorder:[...this.state.Allorder,arr]})
-      // console.log(this.state.Allorder)
-      // console.log(nextProps.order,nextProps.amount,nextProps.specialIns)
-  //   }
-  // }
 
   componentDidMount () {
-   
-   
     const initfilter = this.props.item.Menu.filter(item => {
       return item.type == this.props.item.type[0]
     })
@@ -290,3 +274,5 @@ const styles = StyleSheet.create({
     resizeMode: 'cover'
   }
 })
+
+export default connect()(Restaurant)

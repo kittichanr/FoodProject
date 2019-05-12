@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
+import { connect } from 'react-redux';
 
-export default class DrawerMenu extends Component {
+class DrawerMenu extends Component {
   render() {
     return (
       <View>
@@ -10,3 +11,5 @@ export default class DrawerMenu extends Component {
     )
   }
 }
+const mapStateToProps = state => ({})
+export default connect(mapStateToProps)(DrawerMenu)

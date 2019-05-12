@@ -1,0 +1,4 @@
+export const ADD_ORDER = 'ADD_ORDER';
+
+export const INCREASE_VALUE = 'INCREASE_VALUE';
+export const DECREASE_VALUE = 'DECREASE_VALUE';

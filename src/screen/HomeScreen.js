@@ -1,57 +1,47 @@
 import React from 'react'
-import { StyleSheet, Image, Text, View,TouchableOpacity,FlatList,Button} from 'react-native'
+import { StyleSheet, Image, Text, View, TouchableOpacity, FlatList, Button } from 'react-native'
 import firebaseService from '../environment/Firebase'
 import { Actions } from 'react-native-router-flux'
-import { Icon ,Card,CardItem,} from 'native-base';
+import { Icon, Card, CardItem, } from 'native-base';
 import { Constants, Location, Permissions } from 'expo';
+import { connect } from 'react-redux';
 
 const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
-export default class HomeScreen extends React.Component {
-  constructor (props) {
+class HomeScreen extends React.Component {
+  constructor(props) {
     super(props)
-    this.state = { 
-      currentUser: null ,
-      location: { coords: {latitude: 0, longitude: 0}},
-      result:'',
-      items:[],      
-      Allorder:[]
+    this.state = {
+      currentUser: null,
+      location: { coords: { latitude: 0, longitude: 0 } },
+      result: '',
+      items: [],
+      Allorder: []
     }
   }
 
   _renderRightButton = () => {
-    return(
-            <Icon type='Feather' name='shopping-bag' style={{fontSize: 24,color:'black',paddingHorizontal: 5}} onPress={()=>Actions.push('cart',{Allorder:this.state.Allorder})}/>
-        
-    );
-};
+    return (
+      <Icon type='Feather' name='shopping-bag' style={{ fontSize: 24, color: 'black', paddingHorizontal: 5 }} onPress={() => Actions.push('cart', { Allorder: this.state.Allorder })} />
 
-  componentWillMount(){
-    this.props.navigation.setParams({ 
-      right: this._renderRightButton });
+    );
+  };
+
+  componentWillMount() {
+    this.props.navigation.setParams({
+      right: this._renderRightButton
+    });
     firebaseService.database().ref(`/Restaurant`).once(
       'value', (snapshot) => {
         let data = snapshot.val();
         let items = Object.values(data);
-        this.setState({items});
-     });
+        this.setState({ items });
+      });
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { currentUser } = firebaseService.auth()
     this.setState({ currentUser })
   }
-  
-  // componentWillReceiveProps(nextProps){
-  //   if(nextProps.Allorder !== undefined){
-  //     if(this.state.Allorder[0] == undefined){
-  //       this.state.Allorder.splice(0,1)
-  //     }
-  //     // console.log(nextProps.Allorder)
-  //     // for(var i = 0 ; i< nextProps.Allorder.length;i++){
-  //     this.setState({Allorder:this.state.Allorder.concat(nextProps.Allorder)})
-  //   // }
-  //   }
-  // }
 
   signOutUser = async () => {
     try {
@@ -66,36 +56,36 @@ export default class HomeScreen extends React.Component {
     this.signOutUser()
   }
 
-  getLocation = async() =>{
+  getLocation = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
-   if (status !== 'granted') {
-     this.setState({
-       locationResult: 'Permission to access location was denied',
-       location,
-     });
-   }
+    if (status !== 'granted') {
+      this.setState({
+        locationResult: 'Permission to access location was denied',
+        location,
+      });
+    }
 
-    const location =  await Location.getCurrentPositionAsync(GEOLOCATION_OPTIONS);
-    this.setState({ location:{coords:{latitude:location.coords.latitude,longitude:location.coords.longitude}} });
+    const location = await Location.getCurrentPositionAsync(GEOLOCATION_OPTIONS);
+    this.setState({ location: { coords: { latitude: location.coords.latitude, longitude: location.coords.longitude } } });
     try {
-      let result =  await Location.reverseGeocodeAsync(this.state.location.coords);
-      
+      let result = await Location.reverseGeocodeAsync(this.state.location.coords);
+
       this.setState({ result });
     } catch (e) {
       this.setState({ error: e });
-    } 
+    }
     // console.log(this.state.result)
   }
 
-  renderItem = ({item}) =>{
-    return(
-      <TouchableOpacity onPress={()=>Actions.push('restaurant',{item:item})}>
+  renderItem = ({ item }) => {
+    return (
+      <TouchableOpacity onPress={() => Actions.push('restaurant', { item: item })}>
         <Card>
           <CardItem cardBody>
-            <Image source={{uri:item.Img}} style={{width:'100%',height:150}}/>
+            <Image source={{ uri: item.Img }} style={{ width: '100%', height: 150 }} />
           </CardItem>
           <CardItem >
-              <Text>{item.Name}</Text>
+            <Text>{item.Name}</Text>
           </CardItem>
         </Card>
       </TouchableOpacity>
@@ -104,17 +94,16 @@ export default class HomeScreen extends React.Component {
 
 
 
-  render () {
+  render() {
     // console.log("Allorder home",this.state.Allorder)
-    
-    const { currentUser,result } = this.state
+    const { currentUser, result } = this.state
     return (
       <View style={styles.container}>
-        <View style={{flexDirection:'row',justifyContent: 'flex-start',marginLeft:5}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginLeft: 5 }}>
           <Text style={styles.text}>Delivery to: </Text>
-          <Text style={[styles.text,{color:'red'}]}>{result==''?' ':'Current Location'}</Text>
-          <TouchableOpacity onPress={()=>this.getLocation()}>
-            <Icon type='MaterialIcons' name='my-location' style={styles.locateIcon}/>
+          <Text style={[styles.text, { color: 'red' }]}>{result == '' ? ' ' : 'Current Location'}</Text>
+          <TouchableOpacity onPress={() => this.getLocation()}>
+            <Icon type='MaterialIcons' name='my-location' style={styles.locateIcon} />
           </TouchableOpacity>
         </View>
         <View>
@@ -122,7 +111,7 @@ export default class HomeScreen extends React.Component {
             data={this.state.items}
             renderItem={this.renderItem}
             keyExtractor={(item, index) => index.toString()}
-            style={{padding:10}}
+            style={{ padding: 10 }}
           />
         </View>
         {/* <Text>Hi {currentUser && currentUser.email}!</Text> */}
@@ -136,16 +125,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 5,
-    backgroundColor:'white'
+    backgroundColor: 'white'
   },
-  locateIcon:{
+  locateIcon: {
     fontSize: 48,
-    color:'black',
+    color: 'black',
     marginLeft: 5,
   },
-  text:{
-    alignSelf:'center',
+  text: {
+    alignSelf: 'center',
     fontWeight: 'bold',
   }
-  
+
 })
+
+const mapStateToProps = state => ({})
+export default connect(mapStateToProps)(HomeScreen)

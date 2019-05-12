@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import {
   StyleSheet,
-  Image,
   Text,
   View,
   TouchableOpacity,
   FlatList,
-  Button,
   AsyncStorage,
   InteractionManager
 } from 'react-native'
@@ -21,43 +19,30 @@ import {
   Footer
 } from 'native-base'
 import { Actions } from 'react-native-router-flux'
-export default class Cart extends Component {
-  constructor (props) {
+
+import { connect } from 'react-redux'
+import {increaseValue,decreaseValue} from '../actions/Menu'
+
+
+class Cart extends Component {
+  constructor(props) {
     super(props)
     this.state = {
       totalPrice: 0,
       Allorder: ''
     }
   }
-  componentWillMount () {
-    this._load()
-  }
 
-  componentDidMount () {
+  componentWillMount() { }
+
+  componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
-      Actions.refresh({ onBack: () => this.saveItem() })
+      Actions.refresh({ onBack: () => this._back() })
     })
   }
 
-  // Save current order when back
-  saveItem = async () => {
-    await AsyncStorage.setItem('Order', JSON.stringify(this.state.Allorder))
+  _back = () => {
     Actions.pop()
-  }
-
-  // Load Order from AsynStorage
-  _load = async () => {
-    try {
-      const item = await AsyncStorage.getItem('Order')
-      const order = JSON.parse(item)
-      if (order != null) {
-        this.setState({ Allorder: order })
-      } else {
-        this.setState({ Allorder: [] })
-      }
-    } catch (error) {
-      console.log(error.message)
-    }
   }
 
   checkOut = async () => {
@@ -70,21 +55,25 @@ export default class Cart extends Component {
 
   // Decrease value each item
   decreaseValue = index => {
-    const Allorder = [...this.state.Allorder]
-    Allorder[index].amount -= 1
-    this.setState({ Allorder: Allorder })
-    // if amount = 0 remove that index
-    if (this.state.Allorder[index].amount < 1) {
-      Allorder.splice(index, 1)
-      this.setState({ Allorder: Allorder })
-    }
+    this.props.decreaseValue(index)
+
+    // const Allorder = [...this.state.Allorder]
+    // Allorder[index].amount -= 1
+    // this.setState({ Allorder: Allorder })
+    // // if amount = 0 remove that index
+    // if (this.state.Allorder[index].amount < 1) {
+    //   Allorder.splice(index, 1)
+    //   this.setState({ Allorder: Allorder })
+    // }
   }
 
   // Increase value each item
   increaseValue = index => {
-    const Allorder = [...this.state.Allorder]
-    Allorder[index].amount += 1
-    this.setState({ Allorder: Allorder })
+    this.props.increaseValue(index)
+    // const Allorder = [...this.state.Allorder]
+    // Allorder[index].amount += 1
+    // this.setState({ Allorder: Allorder })
+
   }
 
   remove = index => {
@@ -130,17 +119,7 @@ export default class Cart extends Component {
         </Right>
         <Right>
           <TouchableOpacity
-            style={{
-              height: 30,
-              width: 60,
-              backgroundColor: 'grey',
-              borderRadius: 10,
-              borderWidth: 1,
-              textAlign: 'center',
-              justifyContent: 'center',
-              borderColor: '#fff',
-              marginLeft: 5
-            }}
+            style={styles.removeButton}
             activeOpacity={0.5}
             onPress={() => {
               this.remove(index)
@@ -155,21 +134,15 @@ export default class Cart extends Component {
     )
   }
 
-  test (order) {
+  test(order) {
     var sum = 0
     for (var i = 0; i < order.length; i++) {
       sum += order[i].amount * order[i].order.price
     }
     if (order.length == 0) {
-      AsyncStorage.setItem('restaurantName', '')
       return (
         <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center'
-          }}
+          style={styles.container}
         >
           <Text>There are no item in cart!</Text>
         </View>
@@ -177,12 +150,7 @@ export default class Cart extends Component {
     }
     return (
       <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          textAlign: 'center'
-        }}
+        style={styles.container}
       >
         <Card style={{ width: 300 }}>
           <CardItem header>
@@ -218,32 +186,10 @@ export default class Cart extends Component {
           </CardItem>
         </Card>
         <View
-          style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'white',
-            height: 60,
-            justifyContent: 'space-around',
-            borderColor: 'black',
-            borderWidth: 1,
-            padding: 5,
-            flexDirection: 'row'
-          }}
+          style={styles.viewCheckOut}
         >
           <TouchableOpacity
-            style={{
-              height: 40,
-              width: 150,
-              backgroundColor: 'green',
-              borderRadius: 10,
-              borderWidth: 1,
-              textAlign: 'center',
-              justifyContent: 'center',
-              borderColor: '#fff',
-              marginLeft: 5
-            }}
+            style={styles.checkOut}
             activeOpacity={0.5}
             onPress={() => {
               this.checkOut()
@@ -258,8 +204,68 @@ export default class Cart extends Component {
     )
   }
 
-  render () {
-    const order = this.state.Allorder
+  render() {
+    const order = this.props.order
+    console.log(order)
     return <View style={{ flex: 1 }}>{this.test(order)}</View>
   }
 }
+
+const styles = StyleSheet.create({
+  container:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center'
+  },
+  removeButton: {
+    height: 30,
+    width: 60,
+    backgroundColor: 'grey',
+    borderRadius: 10,
+    borderWidth: 1,
+    textAlign: 'center',
+    justifyContent: 'center',
+    borderColor: '#fff',
+    marginLeft: 5
+  },
+  checkOut: {
+    height: 40,
+    width: 150,
+    backgroundColor: 'green',
+    borderRadius: 10,
+    borderWidth: 1,
+    textAlign: 'center',
+    justifyContent: 'center',
+    borderColor: '#fff',
+    marginLeft: 5
+  },
+  viewCheckOut: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'white',
+    height: 60,
+    justifyContent: 'space-around',
+    borderColor: 'black',
+    borderWidth: 1,
+    padding: 5,
+    flexDirection: 'row'
+  }
+})
+
+const mapStateToProps = state => ({
+  order: state.menu.order
+})
+const mapDispatchToProps = dispatch => ({
+
+  increaseValue: (index) => {
+    dispatch(increaseValue(index))
+  },
+  decreaseValue:(index) => {
+    dispatch(decreaseValue(index))
+  }
+
+})
+export default connect(mapStateToProps,mapDispatchToProps)(Cart)

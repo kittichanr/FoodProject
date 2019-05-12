@@ -2,8 +2,9 @@ import React from 'react'
 import { StyleSheet, Text, TextInput, View, Button } from 'react-native'
 import firebaseService from '../../environment/Firebase'
 import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 
-export default class Login extends React.Component {
+class Login extends React.Component {
   state = { email: '', password: '', errorMessage: null }
   handleLogin = () => {
     const { email, password } = this.state
@@ -59,3 +60,6 @@ const styles = StyleSheet.create({
     marginTop: 8
   }
 })
+
+const mapStateToProps = state => ({})
+export default connect(mapStateToProps)(Login)

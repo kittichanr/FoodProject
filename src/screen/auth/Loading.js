@@ -2,8 +2,8 @@ import React from 'react'
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native'
 import firebaseService from '../../environment/Firebase'
 import { Actions } from 'react-native-router-flux';
-
-export default class Loading extends React.Component {
+import { connect } from 'react-redux';
+class Loading extends React.Component {
 
   componentDidMount() {
     firebaseService.auth().onAuthStateChanged(user => {
@@ -34,3 +34,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   }
 })
+
+export default connect()(Loading)
