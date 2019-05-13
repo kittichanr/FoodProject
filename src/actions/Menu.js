@@ -2,11 +2,11 @@ import * as types from './types'
 
 //MenuScreen
 export const addOrder = order => {
-    return {
-      type: types.ADD_ORDER,
-      payload: order
-    }
+  return {
+    type: types.ADD_ORDER,
+    payload: order
   }
+}
 
 //Cart
 export const increaseValue = index => {
@@ -20,5 +20,17 @@ export const decreaseValue = index => {
   return {
     type: types.DECREASE_VALUE,
     payload: index
+  }
+}
+
+export const removeOrder = index => {
+  return {
+    type: types.REMOVE_ORDER,
+    payload: index
+  }
+}
+export const checkDuplicateItem = () => {
+  return {
+    type: types.CHECK_DUPLICATE_ITEM,
   }
 }

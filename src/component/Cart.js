@@ -21,7 +21,7 @@ import {
 import { Actions } from 'react-native-router-flux'
 
 import { connect } from 'react-redux'
-import {increaseValue,decreaseValue} from '../actions/Menu'
+import {increaseValue,decreaseValue,removeOrder,checkDuplicateItem} from '../actions/Menu'
 
 
 class Cart extends Component {
@@ -33,7 +33,9 @@ class Cart extends Component {
     }
   }
 
-  componentWillMount() { }
+  componentWillMount() {
+    this.props.checkDuplicateItem();
+  }
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
@@ -45,42 +47,23 @@ class Cart extends Component {
     Actions.pop()
   }
 
-  checkOut = async () => {
-    // await AsyncStorage.setItem('History', JSON.stringify(this.state.Allorder))
+  checkOut = () => {
     // add to firebase Order and restaurantNAme //
-    await AsyncStorage.removeItem('Order')
     alert('Check Out Success')
     Actions.pop()
   }
 
-  // Decrease value each item
   decreaseValue = index => {
     this.props.decreaseValue(index)
 
-    // const Allorder = [...this.state.Allorder]
-    // Allorder[index].amount -= 1
-    // this.setState({ Allorder: Allorder })
-    // // if amount = 0 remove that index
-    // if (this.state.Allorder[index].amount < 1) {
-    //   Allorder.splice(index, 1)
-    //   this.setState({ Allorder: Allorder })
-    // }
   }
 
-  // Increase value each item
   increaseValue = index => {
     this.props.increaseValue(index)
-    // const Allorder = [...this.state.Allorder]
-    // Allorder[index].amount += 1
-    // this.setState({ Allorder: Allorder })
-
   }
 
   remove = index => {
-    const Allorder = [...this.state.Allorder]
-    Allorder.splice(index, 1)
-    this.setState({ Allorder: Allorder })
-    // this.saveItem()
+    this.props.removeOrder(index)
   }
 
   renderItem = ({ item, index }) => {
@@ -206,7 +189,6 @@ class Cart extends Component {
 
   render() {
     const order = this.props.order
-    console.log(order)
     return <View style={{ flex: 1 }}>{this.test(order)}</View>
   }
 }
@@ -265,6 +247,12 @@ const mapDispatchToProps = dispatch => ({
   },
   decreaseValue:(index) => {
     dispatch(decreaseValue(index))
+  },
+  removeOrder:(index) =>{
+    dispatch(removeOrder(index))
+  },
+  checkDuplicateItem:()=>{
+    dispatch(checkDuplicateItem())
   }
 
 })

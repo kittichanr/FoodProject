@@ -1,21 +1,26 @@
 import * as types from '../actions/types';
 
-
-
 const initialState = {
-  order: []
+  order: [],
+
 };
 
 const menuReducer = (state = initialState, action) => {
   const order = [...state.order]
   switch (action.type) {
     case types.ADD_ORDER:
+      order.filter((item, index) => {
+        if (action.payload.Menuname == item.Menuname && action.payload.order.item == item.order.item) {
+          item.amount += action.payload.amount;
+          return order
+        }
+      })
       return {
         ...state,
         order: [...state.order, action.payload]
       };
     case types.INCREASE_VALUE:
-      
+
       order[action.payload].amount += 1
       return {
         ...state,
@@ -29,6 +34,21 @@ const menuReducer = (state = initialState, action) => {
       return {
         ...state,
         order: order
+      };
+    case types.REMOVE_ORDER:
+      order.splice(action.payload, 1)
+      return {
+        ...state,
+        order: order
+      };
+    case types.CHECK_DUPLICATE_ITEM:
+      const unique = order.map((item, index) => item['Menuname'] && item.order['item'])
+        .map((e, i, final) => final.indexOf(e) === i && i)
+        .filter(e => order[e]).map(e => order[e]);
+
+      return {
+        ...state,
+        order: unique
       };
     default:
       return state;

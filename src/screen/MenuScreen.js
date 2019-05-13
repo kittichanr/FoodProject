@@ -114,7 +114,7 @@ class MenuScreen extends Component {
     const { data, amount, specialIns } = this.state
     const obj = { Menuname: name, order: data, amount: amount, specialIns: specialIns }
   if(amount > 0 && data != undefined){
-    this.props.addOrder(obj);
+        this.props.addOrder(obj);
     alert('Add Order');
     Actions.pop();
   }
@@ -293,12 +293,11 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   order: state.menu.order
 })
-
 const mapDispatchToProps = dispatch => ({
 
   addOrder: (order) => {
     dispatch(addOrder(order))
-  }
+  },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuScreen)
