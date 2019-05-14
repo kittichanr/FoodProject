@@ -115,7 +115,7 @@ class HomeScreen extends React.Component {
           />
         </View>
         {/* <Text>Hi {currentUser && currentUser.email}!</Text> */}
-        <Button title='LogOut' onPress={() => this.logout()} />
+        {/* <Button title='LogOut' onPress={() => this.logout()} /> */}
         {/* <Button title='Page2' onPress={()=>Actions.page2()}/> */}
       </View>
     )

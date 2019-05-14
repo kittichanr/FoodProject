@@ -1,10 +1,12 @@
 import * as types from './types'
 
+
 //MenuScreen
-export const addOrder = order => {
+export const addOrder = (order, restaurantname) => {
   return {
     type: types.ADD_ORDER,
-    payload: order
+    payload: order,
+    restaurantname
   }
 }
 
@@ -32,5 +34,10 @@ export const removeOrder = index => {
 export const checkDuplicateItem = () => {
   return {
     type: types.CHECK_DUPLICATE_ITEM,
+  }
+}
+export const removeCart = () => {
+  return {
+    type: types.REMOVE_CART,
   }
 }

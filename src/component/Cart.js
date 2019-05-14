@@ -23,7 +23,6 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import {increaseValue,decreaseValue,removeOrder,checkDuplicateItem} from '../actions/Menu'
 
-
 class Cart extends Component {
   constructor(props) {
     super(props)
@@ -48,9 +47,8 @@ class Cart extends Component {
   }
 
   checkOut = () => {
-    // add to firebase Order and restaurantNAme //
     alert('Check Out Success')
-    Actions.pop()
+    Actions.checkout({orderCheckOut:this.props.order,restaurantname:this.props.restaurantname})
   }
 
   decreaseValue = index => {
@@ -238,7 +236,8 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => ({
-  order: state.menu.order
+  order: state.menu.order,
+  restaurantname:state.menu.restaurantname
 })
 const mapDispatchToProps = dispatch => ({
 

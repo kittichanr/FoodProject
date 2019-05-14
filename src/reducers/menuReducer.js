@@ -2,6 +2,7 @@ import * as types from '../actions/types';
 
 const initialState = {
   order: [],
+  restaurantname: ''
 
 };
 
@@ -17,7 +18,8 @@ const menuReducer = (state = initialState, action) => {
       })
       return {
         ...state,
-        order: [...state.order, action.payload]
+        order: [...state.order, action.payload],
+        restaurantname: action.restaurantname
       };
     case types.INCREASE_VALUE:
 
@@ -49,6 +51,12 @@ const menuReducer = (state = initialState, action) => {
       return {
         ...state,
         order: unique
+      };
+    case types.REMOVE_CART:
+      return {
+        ...state,
+        order: [],
+        restaurantname: ''
       };
     default:
       return state;

@@ -15,6 +15,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { connect } from 'react-redux';
 import { addOrder } from '../actions/Menu'
 
+
 const PARALLAX_HEADER_HEIGHT = 300;
 class MenuScreen extends Component {
   constructor(props) {
@@ -114,7 +115,7 @@ class MenuScreen extends Component {
     const { data, amount, specialIns } = this.state
     const obj = { Menuname: name, order: data, amount: amount, specialIns: specialIns }
   if(amount > 0 && data != undefined){
-        this.props.addOrder(obj);
+        this.props.addOrder(obj,this.props.restaurantName);
     alert('Add Order');
     Actions.pop();
   }
@@ -123,6 +124,7 @@ class MenuScreen extends Component {
   }
 
   render() {
+    
     const { img, name, price } = this.props.menu
     const { amount } = this.state
     return (
@@ -295,8 +297,8 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = dispatch => ({
 
-  addOrder: (order) => {
-    dispatch(addOrder(order))
+  addOrder: (order,restaurantname) => {
+    dispatch(addOrder(order,restaurantname))
   },
 })
 

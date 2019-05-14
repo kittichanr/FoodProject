@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, BackHandler } from 'react-native';
 import { Icon } from 'native-base';
-import { Scene, Router, Stack, Actions, Drawer,Modal } from 'react-native-router-flux';
+import { Scene, Router, Stack, Actions, Drawer,Modal,ActionConst } from 'react-native-router-flux';
 import Loading from '../screen/auth/Loading';
 import SignUp from '../screen/auth/SignUp';
 import Login from '../screen/auth/Login';
@@ -10,6 +10,8 @@ import Restaurant from '../screen/Restaurant';
 import MenuScreen from '../screen/MenuScreen';
 import DrawerMenu from '../component/DrawerMenu';
 import Cart from '../component/Cart';
+import CheckOut from '../screen/CheckOut'
+import Tracking from '../screen/Tracking'
 
 import {Provider} from 'react-redux';
 import configureStore from '../store/store';
@@ -46,11 +48,13 @@ export class AppNavigator extends React.Component{
       <Scene key='loading' component={Loading} hideNavBar initial/>
       <Scene key='signup' component={SignUp} hideNavBar />
       <Scene key='login' component={Login} hideNavBar />
+      
       <Drawer hideNavBar
               key="drawer"
               contentComponent={DrawerMenu}
               drawerIcon={menuIcon}
               drawerWidth={300}
+              type={ActionConst.RESET}
               
               >
         <Scene key='home' component={HomeScreen} title="Home" />
@@ -59,6 +63,8 @@ export class AppNavigator extends React.Component{
     <Scene key='restaurant' component={Restaurant} hideNavBar/>
     <Scene key='menu' component={MenuScreen} hideNavBar  />
     <Scene key='cart' component={Cart} title="Cart" back={true}/>
+    <Scene key='checkout' component={CheckOut} title="CheckOut" back={true}/>
+    <Scene key='tracking' component={Tracking} title="Tracking" back={true} drawer={true}/>
    </Modal>
   </RouterRedux>
   </Provider>
