@@ -26,11 +26,12 @@ export class CheckOut extends Component {
         const order = this.props.orderCheckOut
         if (this.state.contact != '' && this.state.reciever != '') {
             if (this.state.contact.match(/\d/g).length === 10) {
-                firebaseService.database().ref('order/' + restaurantname + '/' + uid).set({
+                firebaseService.database().ref('order/' + restaurantname + '/' + uid).push({
                     name: this.state.reciever,
                     contact: this.state.contact,
                     location: this.state.location,
-                    order: order
+                    order: order,
+                    restaurantname:restaurantname
                 })
                 Actions.tracking()
                 this.props.removeCart()
