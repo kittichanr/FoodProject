@@ -12,6 +12,7 @@ import DrawerMenu from '../component/DrawerMenu';
 import Cart from '../component/Cart';
 import CheckOut from '../screen/CheckOut'
 import Tracking from '../screen/Tracking'
+import TrackDetail from '../screen/TrackDetail'
 
 import {Provider} from 'react-redux';
 import configureStore from '../store/store';
@@ -64,7 +65,8 @@ export class AppNavigator extends React.Component{
     <Scene key='menu' component={MenuScreen} hideNavBar  />
     <Scene key='cart' component={Cart} title="Cart" back={true}/>
     <Scene key='checkout' component={CheckOut} title="CheckOut" back={true}/>
-    <Scene key='tracking' component={Tracking} title="Tracking" back={true} drawer={true}/>
+    <Scene key='tracking' component={Tracking} title="Tracking" back={true} />
+    <Scene key='trackdetail' component={TrackDetail} title="TrackDetail" back={true} />
    </Modal>
   </RouterRedux>
   </Provider>
