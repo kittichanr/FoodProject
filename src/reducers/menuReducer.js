@@ -3,6 +3,7 @@ import * as types from '../actions/types';
 const initialState = {
   order: [],
   restaurantname: ''
+ 
 
 };
 
@@ -20,13 +21,15 @@ const menuReducer = (state = initialState, action) => {
         return{
           ...state,
         order: [action.payload],
-        restaurantname: action.restaurantname
+        restaurantname: action.restaurantname,
+       
         }
       }
       return {
         ...state,
         order: [...state.order, action.payload],
-        restaurantname: action.restaurantname
+        restaurantname: action.restaurantname,
+        
       };
     case types.INCREASE_VALUE:
 

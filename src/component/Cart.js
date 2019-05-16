@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   order: state.menu.order,
-  restaurantname:state.menu.restaurantname
+  restaurantname:state.menu.restaurantname,
 })
 const mapDispatchToProps = dispatch => ({
 

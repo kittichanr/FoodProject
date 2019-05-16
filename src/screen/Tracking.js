@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, InteractionManager, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text, InteractionManager, FlatList, TouchableOpacity,Image } from 'react-native'
 import { connect } from 'react-redux'
 import { Container, Header, Content, Card, CardItem, Body, Icon, Left, Right } from 'native-base'
 import firebaseService from '../environment/Firebase'

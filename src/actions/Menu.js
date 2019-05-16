@@ -6,7 +6,7 @@ export const addOrder = (order, restaurantname) => {
   return {
     type: types.ADD_ORDER,
     payload: order,
-    restaurantname
+    restaurantname,
   }
 }
 

@@ -31,7 +31,7 @@ export class CheckOut extends Component {
                     contact: this.state.contact,
                     location: this.state.location,
                     order: order,
-                    restaurantname:restaurantname
+                    restaurantname:restaurantname,
                 })
                 Actions.tracking()
                 this.props.removeCart()
