@@ -16,6 +16,13 @@ const menuReducer = (state = initialState, action) => {
           return order
         }
       })
+      if(action.restaurantname != state.restaurantname){
+        return{
+          ...state,
+        order: [action.payload],
+        restaurantname: action.restaurantname
+        }
+      }
       return {
         ...state,
         order: [...state.order, action.payload],
