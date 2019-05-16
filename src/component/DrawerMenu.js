@@ -23,6 +23,10 @@ class DrawerMenu extends Component {
   tracking = () =>{
     Actions.replace('tracking');
   }
+  history = () =>{
+    Actions.replace('history');
+  }
+
   render() {
     return (
       <View style={{ flex: 1, marginTop: 25 }}>
@@ -39,7 +43,7 @@ class DrawerMenu extends Component {
             <ListItem onPress={()=> this.tracking()}>
               <Text>Tracking</Text>
             </ListItem>
-            <ListItem>
+            <ListItem onPress={()=>this.history()}>
               <Text>History</Text>
             </ListItem>
           </List>

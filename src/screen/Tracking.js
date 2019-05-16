@@ -46,6 +46,20 @@ export class Tracking extends Component {
         }.bind(this));
     }
 
+    _image = (name) => {
+        if(name=="Burger King's"){
+            return <Image 
+            source={{uri: "https://www.festisite.com/static/partylogo/img/logos/burger-king.png"}}
+            style={{width:50,height:50}}    
+            />
+        }
+        if(name=="McDonald's"){
+            return <Image 
+                source={{uri: "https://unitedegg.com/wp-content/uploads/2018/06/mcdonald-998495_640-Pixabay.png"}}
+                style={{width:50,height:50}}
+            />
+        }
+    }
 
     _back = () => {
         Actions.replace('drawer')
@@ -56,11 +70,15 @@ export class Tracking extends Component {
             <TouchableOpacity onPress={() => Actions.trackdetail({ item: item })}>
                 <Card>
                     <CardItem >
-                        <Left style={{ flexDirection: 'column', justifyContent: 'flex-start' }}>
+                        <Left style={{}}>
+
+                            {this._image(item.restaurantname)}
+                        </Left>
+                        <Body style={{ flexDirection: 'column', justifyContent: 'flex-start' }}>
                             <Text>{item.restaurantname}</Text>
                             <Text>Receiver: {item.name}</Text>
                             <Text>Time: 30 Min</Text>
-                        </Left>
+                        </Body>
                         <Right style={{}}>
                             <Icon name="arrow-forward" />
                         </Right>
