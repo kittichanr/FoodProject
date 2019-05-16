@@ -12,28 +12,40 @@ export class Tracking extends Component {
         this.state = {
             tracking: []
         }
+        this.ref = firebaseService.database().ref('order/')
+        this.unsubscribe = null
+        _isMounted = false
     }
 
+
     componentDidMount() {
+        this._isMounted = true
         InteractionManager.runAfterInteractions(() => {
             Actions.refresh({ onBack: () => this._back() })
         })
 
+        this.unsubscribe = this.ref.on('value', this.getTracking)
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe
+        this._isMounted = false
+    }
+
+    getTracking = async (snapshot) => {
         const { uid } = firebaseService.auth().currentUser
         var tracking = []
-        firebaseService.database().ref('order/').once('value', function (snapshot) {
-            snapshot.forEach(function (childSnapshot) {
-                var childKey = childSnapshot.key;
-                var childData = childSnapshot.child(uid).forEach(function (childchildSnapshot) {
-                    // console.log('data'+ JSON.stringify (childchildSnapshot.val()));
-                    tracking.push(childchildSnapshot.val())
+        await snapshot.forEach(function (childSnapshot) {
+            var childKey = childSnapshot.key;
+            var childData = childSnapshot.child(uid).forEach(function (childchildSnapshot) {
+                tracking.push(childchildSnapshot.val())
+                if (this._isMounted) {
                     this.setState({ tracking: tracking })
-                }.bind(this));
+                }
             }.bind(this));
         }.bind(this));
-
-
     }
+
 
     _back = () => {
         Actions.replace('drawer')
@@ -41,7 +53,7 @@ export class Tracking extends Component {
 
     renderItem = ({ item }) => {
         return (
-            <TouchableOpacity onPress={()=>Actions.trackdetail({item:item})}>
+            <TouchableOpacity onPress={() => Actions.trackdetail({ item: item })}>
                 <Card>
                     <CardItem >
                         <Left style={{ flexDirection: 'column', justifyContent: 'flex-start' }}>
