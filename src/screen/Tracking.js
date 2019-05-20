@@ -1,73 +1,108 @@
 import React, { Component } from 'react'
-import { View, Text, InteractionManager, FlatList, TouchableOpacity,Image } from 'react-native'
+import { View, Text, InteractionManager, FlatList, TouchableOpacity, Image, ActivityIndicator, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import { Container, Header, Content, Card, CardItem, Body, Icon, Left, Right } from 'native-base'
 import firebaseService from '../environment/Firebase'
 import { Actions } from 'react-native-router-flux'
 
 
+
+
 export class Tracking extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tracking: []
+            tracking: [],
+            imgtrack: [],
+            trackKey: [],
+            loading: true
         }
         this.ref = firebaseService.database().ref('order/')
+        this.ref2 = firebaseService.database().ref('ImgResTrack/')
         this.unsubscribe = null
+        this.imgtrack = null
         _isMounted = false
+        this.timer = null
     }
 
 
     componentDidMount() {
+        this.timer = setTimeout(() => {this.setState({ loading: false })}, 3000)
         this._isMounted = true
         InteractionManager.runAfterInteractions(() => {
             Actions.refresh({ onBack: () => this._back() })
         })
 
         this.unsubscribe = this.ref.on('value', this.getTracking)
+        this.imgtrack = this.ref2.on('value', this.getImageTrack)
+    }
+    componentWillMount() {
+
     }
 
     componentWillUnmount() {
+        this.imgtrack
         this.unsubscribe
         this._isMounted = false
+        clearTimeout(this.timer);
+        this.timer = null
+        this.setState({ loading: true })
     }
 
-    getTracking = async (snapshot) => {
+    getTracking = (snapshot) => {
         const { uid } = firebaseService.auth().currentUser
         var tracking = []
-        await snapshot.forEach(function (childSnapshot) {
+        var trackKey = []
+        snapshot.forEach(function (childSnapshot) {
             var childKey = childSnapshot.key;
             var childData = childSnapshot.child(uid).forEach(function (childchildSnapshot) {
                 tracking.push(childchildSnapshot.val())
+                trackKey.push(childchildSnapshot.key)
                 if (this._isMounted) {
                     this.setState({ tracking: tracking })
+                    this.setState({ trackKey: trackKey })
                 }
             }.bind(this));
         }.bind(this));
     }
 
+    getImageTrack = (snapshot) => {
+        var imgtrack = []
+        snapshot.forEach(function (childSnapshot) {
+            imgtrack.push({ name: childSnapshot.key, url: childSnapshot.val() })
+            if (this._isMounted) {
+                this.setState({ imgtrack: imgtrack })
+            }
+        }.bind(this))
+
+    }
+
     _image = (name) => {
-        if(name=="Burger King's"){
-            return <Image 
-            source={{uri: "https://www.festisite.com/static/partylogo/img/logos/burger-king.png"}}
-            style={{width:50,height:50}}    
-            />
+        for (var i = 0; i < this.state.imgtrack.length; i++) {
+            if (this.state.imgtrack[i].name == name.replace(/\s/g, '')) {
+                return (<Image
+                    source={{ uri: this.state.imgtrack[i].url }}
+                    style={{ width: 50, height: 50 }}
+                />
+                )
+            }
         }
-        if(name=="McDonald's"){
-            return <Image 
-                source={{uri: "https://unitedegg.com/wp-content/uploads/2018/06/mcdonald-998495_640-Pixabay.png"}}
-                style={{width:50,height:50}}
-            />
-        }
+    }
+
+    loading = () => {
+        setTimeout(() => {
+            this.setState({ loading: false })
+        }, 3000)
+
     }
 
     _back = () => {
         Actions.replace('drawer')
     }
 
-    renderItem = ({ item }) => {
+    renderItem = ({ item, index }) => {
         return (
-            <TouchableOpacity onPress={() => Actions.trackdetail({ item: item })}>
+            <TouchableOpacity onPress={() => Actions.trackdetail({ item: item, imgtrack: this.state.imgtrack, trackKey: this.state.trackKey[index] })}>
                 <Card>
                     <CardItem >
                         <Left style={{}}>
@@ -90,18 +125,32 @@ export class Tracking extends Component {
     }
 
     render() {
+        return (<View style={{ flex: 1 }}>
+            {
+                this.state.loading == true ?
+                    <View style={styles.container}>
+                        <Text>Loading</Text>
+                        <ActivityIndicator size="large" />
+                    </View>
+                    :
+                    <FlatList
+                        data={this.state.tracking}
+                        renderItem={this.renderItem}
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+            }
+        </View>
 
-        return (
-            <View style={{ flex: 1 }}>
-                <FlatList
-                    data={this.state.tracking}
-                    renderItem={this.renderItem}
-                    keyExtractor={(item, index) => index.toString()}
-                />
-            </View>
         )
+
     }
 }
+const styles = StyleSheet.create({
+    container: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
+})
 
 const mapStateToProps = (state) => ({
 

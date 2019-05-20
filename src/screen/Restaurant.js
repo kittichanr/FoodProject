@@ -43,29 +43,29 @@ const TAB_PROPS = {
 }
 
 class Restaurant extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       scrollY: new Animated.Value(0),
       filterMenu: [],
       isReady: false,
-      Allorder:[]
+      Allorder: []
     }
     this.headerY = Animated.multiply(
       Animated.diffClamp(this.state.scrollY, 0, HEADER_SCROLL_DISTANCE),
       -1
     )
   }
-  
 
-  componentDidMount () {
+
+  componentDidMount() {
     const initfilter = this.props.item.Menu.filter(item => {
       return item.type == this.props.item.type[0]
     })
     this.setState({ filterMenu: initfilter })
   }
 
-  _renderScrollViewContent () {
+  _renderScrollViewContent() {
     const data = Array.from({ length: 30 })
     return (
       <View>
@@ -78,7 +78,7 @@ class Restaurant extends Component {
     )
   }
 
-  filterMenu (i) {
+  filterMenu(i) {
     const data = this.props.item.Menu.filter(item => {
       return item.type == i.ref.props.heading
     })
@@ -90,39 +90,40 @@ class Restaurant extends Component {
     const tabContent = (
       <List>{new Array(20).fill(null).map((_, i) => <Item
         key={i}><Text>Item {i}</Text></Item>)}</List>)
-        const tabY = Animated.add(this.state.scrollY, this.headerY)
+    const tabY = Animated.add(this.state.scrollY, this.headerY)
     return (
-     
-        <Animated.ScrollView
+
+      <Animated.ScrollView
+      
+        scrollEventThrottle={1}
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+        style={{ zIndex: 0,height:'100%', elevation: -1 }}
+        contentContainerStyle={{ paddingTop: HEADER_MAX_HEIGHT}}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: this.state.scrollY } } }],
+
+        )}
+        overScrollMode="never"
         
-          scrollEventThrottle={1}
-          bounces={false}
-          showsVerticalScrollIndicator={false}
-          style={{zIndex: 0, height: '100%', elevation: -1}}
-          contentContainerStyle={{paddingTop: HEADER_MAX_HEIGHT}}
-          onScroll={Animated.event(
-            [{nativeEvent: {contentOffset: {y: this.state.scrollY}}}],
-           
-          )}
-          overScrollMode="never"
-          >
-          <Tabs 
+      >
+        <Tabs
           onChangeTab={(i, ref, from) => this.filterMenu(i)}
           renderTabBar={(props) => <Animated.View
             style={[{
-              transform: [{translateY: tabY}],
+              transform: [{ translateY: tabY }],
               zIndex: 1,
               width: '100%',
               backgroundColor: COLOR
-            }, Platform.OS === 'ios' ? {paddingTop: 20} : null]}>
-            <ScrollableTab {...props} underlineStyle={{backgroundColor: 'white'}}/>
+            }, Platform.OS === 'ios' ? { paddingTop: 20 } : null]}>
+            <ScrollableTab {...props} underlineStyle={{ backgroundColor: 'white' }} />
           </Animated.View>
           }>
-           {this.props.item.type.map((data, index) => (
+          {this.props.item.type.map((data, index) => (
             <Tab heading={data} key={data}>
               {this.state.filterMenu.map((item, index) => {
-                  return (
-                    <TouchableOpacity onPress={()=>Actions.menu({menu:item,restaurantName:this.props.item.Name})} key={index}>
+                return (
+                  <TouchableOpacity onPress={() => Actions.menu({ menu: item, restaurantName: this.props.item.Name })} key={index}>
                     <Card key={index}>
                       <CardItem cardBody>
                         <Image
@@ -137,39 +138,40 @@ class Restaurant extends Component {
                         </Right>
                       </CardItem>
                     </Card>
-                    </TouchableOpacity>
-                  )
-                })}
+                  </TouchableOpacity>
+                )
+              })}
             </Tab>
-           ))}
-          </Tabs>
-        </Animated.ScrollView>
-     
+          ))}
+        </Tabs>
+      
+      </Animated.ScrollView>
+
     )
   }
 
-  render () {
+  render() {
     // console.log("Allorder restaurant",this.state.Allorder)
-        const headerHeight = this.state.scrollY.interpolate({
-          inputRange: [0, HEADER_SCROLL_DISTANCE],
-          outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
-          extrapolate: 'clamp'
-        })
-        const imageOpacity = this.state.scrollY.interpolate({
-          inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
-          outputRange: [1, 1, 0],
-          extrapolate: 'clamp'
-        })
-        const imageTranslate = this.state.scrollY.interpolate({
-          inputRange: [0, HEADER_SCROLL_DISTANCE],
-          outputRange: [0, -50],
-          extrapolate: 'clamp'
-        })
-       
-        const { Name, Img } = this.props.item
+    const headerHeight = this.state.scrollY.interpolate({
+      inputRange: [0, HEADER_SCROLL_DISTANCE],
+      outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
+      extrapolate: 'clamp'
+    })
+    const imageOpacity = this.state.scrollY.interpolate({
+      inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+      outputRange: [1, 1, 0],
+      extrapolate: 'clamp'
+    })
+    const imageTranslate = this.state.scrollY.interpolate({
+      inputRange: [0, HEADER_SCROLL_DISTANCE],
+      outputRange: [0, -50],
+      extrapolate: 'clamp'
+    })
+
+    const { Name, Img } = this.props.item
     return (
       <View style={styles.container}>
-        <Animated.View style={[styles.header,{
+        <Animated.View style={[styles.header, {
           width: '100%',
           position: 'absolute',
           height: headerHeight,
@@ -189,31 +191,33 @@ class Restaurant extends Component {
             source={{ uri: Img }}
           />
           <Animated.View style={styles.bar}>
-          <View>
-            <Icon
-              name='arrow-back'
-              type='MaterialIcons'
-              style={{
-                color: 'white',
-                fontSize: 24,
-                marginRight: 110,
-              }}
-              onPress={() => {
+            <View>
+              <Icon
+                name='arrow-back'
+                type='MaterialIcons'
+                style={{
+                  color: 'white',
+                  fontSize: 24,
+                  marginRight: 110,
+                }}
+                onPress={() => {
                   Actions.pop()
                   setTimeout(() => {
                     Actions.refresh({
-                      Allorder:this.state.Allorder
+                      Allorder: this.state.Allorder
                     })
                   }, 0)
                 }}
-            />
-          </View>
+              />
+            </View>
             <Text style={styles.title}>{Name}</Text>
           </Animated.View>
         </Animated.View>
         <Animated.View style={[styles.tab]}>
-           {this.tabBar()}
+          {this.tabBar()}
+          
         </Animated.View>
+        
       </View>
     )
   }
@@ -222,7 +226,7 @@ class Restaurant extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 20
+    marginTop: 20,
   },
   fill: {
     flex: 1,
@@ -254,7 +258,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     height: 32,
     justifyContent: 'flex-start',
-   
+
   },
   title: {
     backgroundColor: 'transparent',

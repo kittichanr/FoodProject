@@ -6,6 +6,7 @@ import firebaseService from '../environment/Firebase'
 import { Actions } from 'react-native-router-flux'
 import { removeCart } from '../actions/Menu';
 
+
 export class CheckOut extends Component {
     constructor(props) {
         super(props)
@@ -13,7 +14,8 @@ export class CheckOut extends Component {
             currentUser: null,
             reciever: '',
             contact: '',
-            location: ''
+            location:  this.props.location[0].name+' '+this.props.location[0].street+' '+this.props.location[0].postalCode
+            
         }
     }
     componentDidMount() {
@@ -74,6 +76,7 @@ export class CheckOut extends Component {
         for (var i = 0; i < order.length; i++) {
             sum += order[i].amount * order[i].order.price
         }
+        
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView>

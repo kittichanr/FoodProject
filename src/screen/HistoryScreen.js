@@ -6,8 +6,6 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  Button,
-  AsyncStorage,
   InteractionManager
 } from 'react-native'
 import firebaseService from '../environment/Firebase'
@@ -22,47 +20,63 @@ import {
   Footer
 } from 'native-base'
 import { Actions } from 'react-native-router-flux'
+import HistoryList from '../component/HistoryList'
+
+
 export default class HistoryScreen extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       historyList: ''
     }
+    const { uid } = firebaseService.auth().currentUser
+    this.ref = firebaseService.database().ref('history/' + uid)
+    this.unsubscribe = null
   }
-  componentWillMount () {
+  componentWillMount() {
   }
 
-  componentDidMount () {
+  componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
       Actions.refresh({ onBack: () => this._back() })
-  })
-  
-    this.readUserData()
+    })
+
+
+    this.unsubscribe = this.ref.on('value', this.readUserData)
   }
 
+  componentWillUnmount() {
+    this.unsubscribe
+  }
 
   _back = () => {
     Actions.replace('drawer')
-}
+  }
 
-  readUserData() {
-    const { uid } = firebaseService.auth().currentUser
-        var history = []
-        firebaseService.database().ref('order/').once('value', function (snapshot) {
-            snapshot.forEach(function (childSnapshot) {
-                var childKey = childSnapshot.key;
-                var childData = childSnapshot.child(uid).forEach(function (childchildSnapshot) {
-                    history.push(childchildSnapshot.val())
-                    this.setState({ historyList: history })
-                }.bind(this));
-            }.bind(this));
-        }.bind(this));
-}
+  readUserData = (snapshot) => {
+
+    var history = []
+    snapshot.forEach(function (childSnapshot) {
+      var childKey = childSnapshot.key;
+      var childData = childSnapshot
+      history.push(childData.val())
+      this.setState({ historyList: history })
+    }.bind(this));
+
+  }
+
+  renderItem = ({ item }) => {
+    return (
+      <HistoryList
+        touch={() => Actions.historydetail({ item: item })}
+        data={item}
+      />
+
+    )
+  }
 
 
-
-
-  test (history) {
+  test(history) {
     if (history.length == 0) {
       return (
         <View
@@ -77,22 +91,19 @@ export default class HistoryScreen extends Component {
         </View>
       )
     }
-    console.log(this.state.historyList)
+
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          textAlign: 'center'
-        }}
-      >
-        
+      <View style={{ flex: 1 }}>
+        <FlatList
+          data={history}
+          renderItem={this.renderItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
       </View>
     )
   }
 
-  render () {
+  render() {
     const history = this.state.historyList
     return <View style={{ flex: 1 }}>{this.test(history)}</View>
   }

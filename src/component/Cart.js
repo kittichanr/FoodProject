@@ -23,6 +23,7 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import {increaseValue,decreaseValue,removeOrder,checkDuplicateItem} from '../actions/Menu'
 
+
 class Cart extends Component {
   constructor(props) {
     super(props)
@@ -48,7 +49,7 @@ class Cart extends Component {
 
   checkOut = () => {
     alert('Check Out Success')
-    Actions.checkout({orderCheckOut:this.props.order,restaurantname:this.props.restaurantname})
+    Actions.checkout({orderCheckOut:this.props.order,restaurantname:this.props.restaurantname,location:this.props.location})
   }
 
   decreaseValue = index => {

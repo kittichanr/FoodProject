@@ -21,7 +21,7 @@ class HomeScreen extends React.Component {
 
   _renderRightButton = () => {
     return (
-      <Icon type='Feather' name='shopping-bag' style={{ fontSize: 24, color: 'black', paddingHorizontal: 5 }} onPress={() => Actions.push('cart', { Allorder: this.state.Allorder })} />
+      <Icon type='Feather' name='shopping-bag' style={{ fontSize: 24, color: 'black', paddingHorizontal: 5 }} onPress={() => Actions.push('cart', { Allorder: this.state.Allorder,location:this.state.result})} />
 
     );
   };
@@ -36,6 +36,7 @@ class HomeScreen extends React.Component {
         let items = Object.values(data);
         this.setState({ items });
       });
+      this.getLocation()
   }
 
   componentDidMount() {
@@ -102,9 +103,9 @@ class HomeScreen extends React.Component {
         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginLeft: 5 }}>
           <Text style={styles.text}>Delivery to: </Text>
           <Text style={[styles.text, { color: 'red' }]}>{result == '' ? ' ' : 'Current Location'}</Text>
-          <TouchableOpacity onPress={() => this.getLocation()}>
+          {/* <TouchableOpacity onPress={() => this.getLocation()}>
             <Icon type='MaterialIcons' name='my-location' style={styles.locateIcon} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View>
           <FlatList
