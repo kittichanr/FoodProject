@@ -5,6 +5,7 @@ import { Container, Header, Content, Card, CardItem, Body, Icon, Left, Right } f
 import firebaseService from '../environment/Firebase'
 import { Actions } from 'react-native-router-flux';
 import Modal from "react-native-modal";
+import moment from 'moment';
 
 export class TrackDetail extends Component {
   constructor(props) {
@@ -60,16 +61,13 @@ export class TrackDetail extends Component {
 
   }
   success = (resname) => {
-    var date = new Date().getDate();
-    var month = new Date().getMonth() + 1;
-    var year = new Date().getFullYear();
-    var hours = new Date().getHours(); 
-    var min = new Date().getMinutes();
+    var date = new Date();
+    
     const { uid } = firebaseService.auth().currentUser
     firebaseService.database().ref('history/' + uid).push({
       item: this.props.item,
-      date:date + '/' + month + '/' + year,
-      time:hours+':'+min
+      date:moment(date).format('MMM DD YYYY')
+      
     })
     this.cancel(resname)
     Actions.drawer()

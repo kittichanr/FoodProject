@@ -23,7 +23,6 @@ import { Actions } from 'react-native-router-flux'
 import HistoryList from '../component/HistoryList'
 
 
-
 export default class HistoryScreen extends Component {
   constructor(props) {
     super(props)

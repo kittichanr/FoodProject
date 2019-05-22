@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, TouchableOpacity } from 'react-native'
-import { Body, ListItem as Item, Card, CardItem, Icon, Right, Left, } from 'native-base'
+import { Body, ListItem as Item, Card, CardItem, Icon, Right, Left,List } from 'native-base'
 export class HistoryList extends Component {
     render() {
         const { data, touch } = this.props
@@ -12,7 +12,7 @@ export class HistoryList extends Component {
                             {this.props.image}
                         </Left>
                         <Body style={{ flexDirection: 'column', justifyContent: 'flex-start' }}>
-                            <Text>{data.date} {data.time}</Text>
+                            <Text>{data.date}</Text>
                             <Text>Receiver: {data.item.name}</Text>
                             <Text>{data.item.restaurantname}</Text>
                         </Body>
