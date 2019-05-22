@@ -23,15 +23,20 @@ import { Actions } from 'react-native-router-flux'
 import HistoryList from '../component/HistoryList'
 
 
+
 export default class HistoryScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      historyList: ''
+      historyList: '',
+      imgtrack: [],
     }
     const { uid } = firebaseService.auth().currentUser
     this.ref = firebaseService.database().ref('history/' + uid)
     this.unsubscribe = null
+    this.ref2 = firebaseService.database().ref('ImgResTrack/')
+    this.imgtrack = null
+    _isMounted = false
   }
   componentWillMount() {
   }
@@ -41,16 +46,29 @@ export default class HistoryScreen extends Component {
       Actions.refresh({ onBack: () => this._back() })
     })
 
-
+    this._isMounted = true
     this.unsubscribe = this.ref.on('value', this.readUserData)
+    this.imgtrack = this.ref2.on('value', this.getImageTrack)
   }
 
   componentWillUnmount() {
     this.unsubscribe
+    this.imgtrack
+    this._isMounted = false
   }
 
   _back = () => {
     Actions.replace('drawer')
+  }
+
+  getImageTrack = (snapshot) => {
+    var imgtrack = []
+    snapshot.forEach(function (childSnapshot) {
+      imgtrack.push({ name: childSnapshot.key, url: childSnapshot.val() })
+      if (this._isMounted) {
+        this.setState({ imgtrack: imgtrack })
+      }
+    }.bind(this))
   }
 
   readUserData = (snapshot) => {
@@ -64,12 +82,24 @@ export default class HistoryScreen extends Component {
     }.bind(this));
 
   }
+  _image = (name) => {
+    for (var i = 0; i < this.state.imgtrack.length; i++) {
+      if (this.state.imgtrack[i].name == name.replace(/\s/g, '')) {
+        return (<Image
+          source={{ uri: this.state.imgtrack[i].url }}
+          style={{ width: 50, height: 50 }}
+        />
+        )
+      }
+    }
+  }
 
   renderItem = ({ item }) => {
     return (
       <HistoryList
-        touch={() => Actions.historydetail({ item: item })}
+        touch={() => Actions.historydetail({ item: item, imgtrack: this.state.imgtrack })}
         data={item}
+        image={this._image(item.item.restaurantname)}
       />
 
     )

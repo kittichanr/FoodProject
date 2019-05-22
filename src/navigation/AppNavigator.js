@@ -46,8 +46,8 @@ export class AppNavigator extends React.Component {
     return (
       <Provider store={store}>
         <RouterRedux backAndroidHandler={_backAndroidHandler}>
-          <Modal >
-            <Scene key='root' hideNavBar={true}>
+          <Modal navigationBarStyle={{backgroundColor:'#0288d1'}}>
+            <Scene key='root' hideNavBar={true}  >
               <Scene key='loading' component={Loading} hideNavBar initial />
               <Scene key='signup' component={SignUp} hideNavBar />
               <Scene key='login' component={Login} hideNavBar />

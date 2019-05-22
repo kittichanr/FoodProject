@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, TouchableOpacity } from 'react-native'
-import { Body, ListItem as Item, Card, CardItem, Icon, Right, } from 'native-base'
+import { Body, ListItem as Item, Card, CardItem, Icon, Right, Left, } from 'native-base'
 export class HistoryList extends Component {
     render() {
         const { data, touch } = this.props
@@ -8,6 +8,9 @@ export class HistoryList extends Component {
             <TouchableOpacity onPress={touch}>
                 <Card>
                     <CardItem >
+                        <Left>
+                            {this.props.image}
+                        </Left>
                         <Body style={{ flexDirection: 'column', justifyContent: 'flex-start' }}>
                             <Text>{data.date} {data.time}</Text>
                             <Text>Receiver: {data.item.name}</Text>

@@ -81,7 +81,7 @@ export class TrackDetail extends Component {
     for (var i = 0; i < item.order.length; i++) {
       sum += item.order[i].amount * item.order[i].order.price
     }
-    // console.log(item)
+    
     return (
       <View>
         <ScrollView>

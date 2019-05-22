@@ -27,7 +27,7 @@ export class Tracking extends Component {
 
 
     componentDidMount() {
-        this.timer = setTimeout(() => {this.setState({ loading: false })}, 3000)
+        this.timer = setTimeout(() => { this.setState({ loading: false }) }, 3000)
         this._isMounted = true
         InteractionManager.runAfterInteractions(() => {
             Actions.refresh({ onBack: () => this._back() })
@@ -74,7 +74,6 @@ export class Tracking extends Component {
                 this.setState({ imgtrack: imgtrack })
             }
         }.bind(this))
-
     }
 
     _image = (name) => {

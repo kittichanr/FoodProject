@@ -3,7 +3,6 @@ import {
   Animated,
   Dimensions,
   Platform,
-  StatusBar,
   Text,
   View,
   Image,
@@ -11,16 +10,11 @@ import {
   StyleSheet
 } from 'react-native'
 import {
-  Body,
-  Header,
   List,
   ListItem as Item,
   ScrollableTab,
   Tab,
   Tabs,
-  Title,
-  Container,
-  Content,
   Card,
   CardItem,
   Icon,
@@ -34,7 +28,7 @@ const HEADER_MAX_HEIGHT = 200
 const HEADER_MIN_HEIGHT = 60
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
-const COLOR = 'rgb(45,181,102)'
+const COLOR = '#5eb8ff'
 const TAB_PROPS = {
   tabStyle: { width: SCREEN_WIDTH / 2, backgroundColor: COLOR },
   activeTabStyle: { width: SCREEN_WIDTH / 2, backgroundColor: COLOR },
@@ -94,18 +88,18 @@ class Restaurant extends Component {
     return (
 
       <Animated.ScrollView
-      
+
         scrollEventThrottle={1}
         bounces={false}
         showsVerticalScrollIndicator={false}
-        style={{ zIndex: 0,height:'100%', elevation: -1 }}
-        contentContainerStyle={{ paddingTop: HEADER_MAX_HEIGHT}}
+        style={{ zIndex: 0, height: '100%', elevation: -1 }}
+        contentContainerStyle={{ paddingTop: HEADER_MAX_HEIGHT }}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: this.state.scrollY } } }],
 
         )}
         overScrollMode="never"
-        
+
       >
         <Tabs
           onChangeTab={(i, ref, from) => this.filterMenu(i)}
@@ -114,37 +108,40 @@ class Restaurant extends Component {
               transform: [{ translateY: tabY }],
               zIndex: 1,
               width: '100%',
-              backgroundColor: COLOR
+              backgroundColor: 'COLOR',
+
             }, Platform.OS === 'ios' ? { paddingTop: 20 } : null]}>
-            <ScrollableTab {...props} underlineStyle={{ backgroundColor: 'white' }} />
+            <ScrollableTab {...props} underlineStyle={{ backgroundColor: 'white' }} style={{ backgroundColor: '#5eb8ff' }} />
           </Animated.View>
           }>
           {this.props.item.type.map((data, index) => (
             <Tab heading={data} key={data}>
               {this.state.filterMenu.map((item, index) => {
                 return (
-                  <TouchableOpacity onPress={() => Actions.menu({ menu: item, restaurantName: this.props.item.Name })} key={index}>
-                    <Card key={index}>
-                      <CardItem cardBody>
-                        <Image
-                          source={{ uri: item.img }}
-                          style={{ width: '100%', height: 150 }}
-                        />
-                      </CardItem>
-                      <CardItem>
-                        <Text>{item.name}</Text>
-                        <Right>
-                          <Text>{item.price} ฿</Text>
-                        </Right>
-                      </CardItem>
-                    </Card>
-                  </TouchableOpacity>
+                  <View style={{ padding: 10 }} key={index}>
+                    <TouchableOpacity onPress={() => Actions.menu({ menu: item, restaurantName: this.props.item.Name })} key={index}>
+                      <Card key={index} style={{ borderRadius: 10 }}>
+                        <CardItem cardBody style={{ borderRadius: 10 }}>
+                          <Image
+                            source={{ uri: item.img }}
+                            style={{ width: '100%', height: 150, borderRadius: 10 }}
+                          />
+                        </CardItem>
+                        <CardItem style={{ borderRadius: 10 }}>
+                          <Text>{item.name}</Text>
+                          <Right>
+                            <Text>{item.price} ฿</Text>
+                          </Right>
+                        </CardItem>
+                      </Card>
+                    </TouchableOpacity>
+                  </View>
                 )
               })}
             </Tab>
           ))}
         </Tabs>
-      
+
       </Animated.ScrollView>
 
     )
@@ -215,9 +212,9 @@ class Restaurant extends Component {
         </Animated.View>
         <Animated.View style={[styles.tab]}>
           {this.tabBar()}
-          
+
         </Animated.View>
-        
+
       </View>
     )
   }
@@ -235,7 +232,7 @@ const styles = StyleSheet.create({
   row: {
     height: 40,
     margin: 16,
-    backgroundColor: '#D3D3D3',
+    backgroundColor: '#5eb8ff',
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -244,7 +241,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#03A9F4',
+    backgroundColor: '#0288d1',
     overflow: 'hidden',
     height: HEADER_MAX_HEIGHT
   },

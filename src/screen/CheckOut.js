@@ -14,8 +14,8 @@ export class CheckOut extends Component {
             currentUser: null,
             reciever: '',
             contact: '',
-            location:  this.props.location[0].name+' '+this.props.location[0].street+' '+this.props.location[0].postalCode
-            
+            location: this.props.location[0].name + ' ' + this.props.location[0].street + ' ' + this.props.location[0].postalCode
+
         }
     }
     componentDidMount() {
@@ -33,7 +33,7 @@ export class CheckOut extends Component {
                     contact: this.state.contact,
                     location: this.state.location,
                     order: order,
-                    restaurantname:restaurantname,
+                    restaurantname: restaurantname,
                 })
                 Actions.tracking()
                 this.props.removeCart()
@@ -76,7 +76,7 @@ export class CheckOut extends Component {
         for (var i = 0; i < order.length; i++) {
             sum += order[i].amount * order[i].order.price
         }
-        
+
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView>
@@ -126,6 +126,7 @@ export class CheckOut extends Component {
                             <CardItem header style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                                 <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Contact</Text>
                                 <TextInput
+                                autoFocus
                                     style={styles.textInput}
                                     value={this.state.contact}
                                     keyboardType='number-pad'
@@ -213,8 +214,8 @@ const mapStateToProps = (state) => ({
 
 })
 
-const mapDispatchToProps = (dispatch)=> ({
-    removeCart:() => {
+const mapDispatchToProps = (dispatch) => ({
+    removeCart: () => {
         dispatch(removeCart())
     }
 })

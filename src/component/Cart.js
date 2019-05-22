@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   FlatList,
   AsyncStorage,
-  InteractionManager
+  InteractionManager,
+  ScrollView
 } from 'react-native'
 import {
   Body,
@@ -21,7 +22,7 @@ import {
 import { Actions } from 'react-native-router-flux'
 
 import { connect } from 'react-redux'
-import {increaseValue,decreaseValue,removeOrder,checkDuplicateItem} from '../actions/Menu'
+import { increaseValue, decreaseValue, removeOrder, checkDuplicateItem } from '../actions/Menu'
 
 
 class Cart extends Component {
@@ -49,7 +50,7 @@ class Cart extends Component {
 
   checkOut = () => {
     alert('Check Out Success')
-    Actions.checkout({orderCheckOut:this.props.order,restaurantname:this.props.restaurantname,location:this.props.location})
+    Actions.checkout({ orderCheckOut: this.props.order, restaurantname: this.props.restaurantname, location: this.props.location })
   }
 
   decreaseValue = index => {
@@ -81,17 +82,17 @@ class Cart extends Component {
             type='MaterialIcons'
             style={{
               color: 'black',
-              fontSize: 20
+              fontSize: 26
             }}
             onPress={() => this.decreaseValue(index)}
           />
-          <Text>{amountItem}</Text>
+          <Text style={{ fontSize: 26 }}>{amountItem}</Text>
           <Icon
             name='control-point'
             type='MaterialIcons'
             style={{
               color: 'black',
-              fontSize: 20
+              fontSize: 26
             }}
             onPress={() => this.increaseValue(index)}
           />
@@ -100,17 +101,15 @@ class Cart extends Component {
           <Text>{amountPrice} ฿</Text>
         </Right>
         <Right>
-          <TouchableOpacity
-            style={styles.removeButton}
-            activeOpacity={0.5}
-            onPress={() => {
-              this.remove(index)
+          <Icon
+            name='trash-o'
+            type='FontAwesome'
+            style={{
+              color: 'black',
+              fontSize: 20
             }}
-          >
-            <Text style={{ color: '#fff', fontSize: 10, textAlign: 'center' }}>
-              REMOVE
-            </Text>
-          </TouchableOpacity>
+            onPress={() => this.remove(index)}
+          />
         </Right>
       </CardItem>
     )
@@ -124,49 +123,51 @@ class Cart extends Component {
     if (order.length == 0) {
       return (
         <View
-          style={styles.container}
+          style={[styles.container,{justifyContent:'center',alignItems:'center'}]}
         >
           <Text>There are no item in cart!</Text>
         </View>
       )
     }
     return (
-      <View
-        style={styles.container}
-      >
-        <Card style={{ width: 300 }}>
-          <CardItem header>
-            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Your Order</Text>
-          </CardItem>
-          <CardItem style={{ fontWeight: 'bold' }} bordered>
-            <Left>
-              <Text>Menu</Text>
-            </Left>
-            <Body>
-              <Text>Amount</Text>
-            </Body>
-            <Right>
-              <Text>Price </Text>
-            </Right>
-            <Right />
-          </CardItem>
-          <FlatList
-            data={order}
-            renderItem={this.renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            style={{ marginTop: 30 }}
-          />
-          <CardItem style={{ fontWeight: 'bold' }} bordered>
-            <Left>
-              <Text style={{ fontWeight: 'bold' }}>Total Price</Text>
-            </Left>
-            <Body />
-            <Right>
-              <Text>{sum} ฿</Text>
-            </Right>
-            <Right />
-          </CardItem>
-        </Card>
+      <View style={styles.container}>
+        <ScrollView>
+          <View style={{ flex: 1 }}>
+            <Card >
+              <CardItem header>
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Your Order</Text>
+              </CardItem>
+              <CardItem style={{ fontWeight: 'bold' }} bordered>
+                <Left>
+                  <Text>Menu</Text>
+                </Left>
+                <Body>
+                  <Text>Amount</Text>
+                </Body>
+                <Right>
+                  <Text>Price </Text>
+                </Right>
+                <Right />
+              </CardItem>
+              <FlatList
+                data={order}
+                renderItem={this.renderItem}
+                keyExtractor={(item, index) => index.toString()}
+                style={{ marginTop: 30 }}
+              />
+              <CardItem style={{ fontWeight: 'bold' }} bordered>
+                <Left>
+                  <Text style={{ fontWeight: 'bold' }}>Total Price</Text>
+                </Left>
+                <Body />
+                <Right>
+                  <Text>{sum} ฿</Text>
+                </Right>
+                <Right />
+              </CardItem>
+            </Card>
+          </View>
+        </ScrollView>
         <View
           style={styles.viewCheckOut}
         >
@@ -193,11 +194,8 @@ class Cart extends Component {
 }
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center'
   },
   removeButton: {
     height: 30,
@@ -238,22 +236,22 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   order: state.menu.order,
-  restaurantname:state.menu.restaurantname,
+  restaurantname: state.menu.restaurantname,
 })
 const mapDispatchToProps = dispatch => ({
 
   increaseValue: (index) => {
     dispatch(increaseValue(index))
   },
-  decreaseValue:(index) => {
+  decreaseValue: (index) => {
     dispatch(decreaseValue(index))
   },
-  removeOrder:(index) =>{
+  removeOrder: (index) => {
     dispatch(removeOrder(index))
   },
-  checkDuplicateItem:()=>{
+  checkDuplicateItem: () => {
     dispatch(checkDuplicateItem())
   }
 
 })
-export default connect(mapStateToProps,mapDispatchToProps)(Cart)
+export default connect(mapStateToProps, mapDispatchToProps)(Cart)

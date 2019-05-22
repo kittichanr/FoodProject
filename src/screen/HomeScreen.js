@@ -1,9 +1,9 @@
 import React from 'react'
-import { StyleSheet, Image, Text, View, TouchableOpacity, FlatList, Button } from 'react-native'
+import { StyleSheet, Image, Text, View, TouchableOpacity, FlatList } from 'react-native'
 import firebaseService from '../environment/Firebase'
 import { Actions } from 'react-native-router-flux'
 import { Icon, Card, CardItem, } from 'native-base';
-import { Constants, Location, Permissions } from 'expo';
+import {  Location, Permissions } from 'expo';
 import { connect } from 'react-redux';
 
 const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
@@ -21,7 +21,7 @@ class HomeScreen extends React.Component {
 
   _renderRightButton = () => {
     return (
-      <Icon type='Feather' name='shopping-bag' style={{ fontSize: 24, color: 'black', paddingHorizontal: 5 }} onPress={() => Actions.push('cart', { Allorder: this.state.Allorder,location:this.state.result})} />
+      <Icon type='Feather' name='shopping-bag' style={{ fontSize: 24, color: 'black', paddingHorizontal: 5 }} onPress={() => Actions.push('cart', { Allorder: this.state.Allorder, location: this.state.result })} />
 
     );
   };
@@ -36,7 +36,7 @@ class HomeScreen extends React.Component {
         let items = Object.values(data);
         this.setState({ items });
       });
-      this.getLocation()
+    this.getLocation()
   }
 
   componentDidMount() {
@@ -75,37 +75,30 @@ class HomeScreen extends React.Component {
     } catch (e) {
       this.setState({ error: e });
     }
-    // console.log(this.state.result)
   }
 
   renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => Actions.push('restaurant', { item: item })}>
-        <Card>
-          <CardItem cardBody>
-            <Image source={{ uri: item.Img }} style={{ width: '100%', height: 150 }} />
+        <Card style={{borderRadius:10}}>
+          <CardItem cardBody bordered style={{borderRadius:10}}>
+            <Image source={{ uri: item.Img }} style={{ width: '100%', height: 150 ,borderRadius:10}} />
           </CardItem>
-          <CardItem >
-            <Text>{item.Name}</Text>
+          <CardItem bordered style={{borderRadius:10}}>
+            <Text style={{fontSize:20}}>{item.Name}</Text>
           </CardItem>
         </Card>
       </TouchableOpacity>
     )
   }
 
-
-
   render() {
-    // console.log("Allorder home",this.state.Allorder)
     const { currentUser, result } = this.state
     return (
       <View style={styles.container}>
         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginLeft: 5 }}>
           <Text style={styles.text}>Delivery to: </Text>
           <Text style={[styles.text, { color: 'red' }]}>{result == '' ? ' ' : 'Current Location'}</Text>
-          {/* <TouchableOpacity onPress={() => this.getLocation()}>
-            <Icon type='MaterialIcons' name='my-location' style={styles.locateIcon} />
-          </TouchableOpacity> */}
         </View>
         <View>
           <FlatList
@@ -115,9 +108,6 @@ class HomeScreen extends React.Component {
             style={{ padding: 10 }}
           />
         </View>
-        {/* <Text>Hi {currentUser && currentUser.email}!</Text> */}
-        {/* <Button title='LogOut' onPress={() => this.logout()} /> */}
-        {/* <Button title='Page2' onPress={()=>Actions.page2()}/> */}
       </View>
     )
   }
@@ -126,7 +116,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 5,
-    backgroundColor: 'white'
   },
   locateIcon: {
     fontSize: 48,

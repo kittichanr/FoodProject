@@ -31,7 +31,7 @@ class MenuScreen extends Component {
   }
 
   componentWillMount() {
-    
+
   }
 
   _renderScrollViewContent(menu) {
@@ -114,17 +114,17 @@ class MenuScreen extends Component {
     const { name, id } = this.props.menu
     const { data, amount, specialIns } = this.state
     const obj = { Menuname: name, order: data, amount: amount, specialIns: specialIns }
-  if(amount > 0 && data != undefined){
-        this.props.addOrder(obj,this.props.restaurantName);
-    alert('Add Order');
-    Actions.pop();
-  }
-    
+    if (amount > 0 && data != undefined) {
+      this.props.addOrder(obj, this.props.restaurantName);
+      alert('Add Order');
+      Actions.pop();
+    }
+
 
   }
 
   render() {
-    
+
     const { img, name, price } = this.props.menu
     const { amount } = this.state
     return (
@@ -138,7 +138,7 @@ class MenuScreen extends Component {
           renderStickyHeader={() => (
             <View
               key='sticky-header'
-              style={{ height: 200, justifyContent: 'flex-start', top: 20 }}
+              style={{ height: 200, justifyContent: 'flex-start', top: 20, backgroundColor: '#0288d1' }}
             >
               <Icon
                 name='close'
@@ -203,8 +203,8 @@ class MenuScreen extends Component {
             }}
           >
             <Icon
-              name='remove-circle-outline'
-              type='MaterialIcons'
+              name='md-remove'
+              type='Ionicons'
               style={{
                 color: 'black',
                 fontSize: 40
@@ -213,8 +213,8 @@ class MenuScreen extends Component {
             />
             <Text style={styles.title}>{this.state.amount}</Text>
             <Icon
-              name='control-point'
-              type='MaterialIcons'
+              name='md-add'
+              type='Ionicons'
               style={{
                 color: 'black',
                 fontSize: 40
@@ -223,7 +223,7 @@ class MenuScreen extends Component {
             />
           </View>
           <View
-            style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}
+            style={{ justifyContent: 'center', flexDirection: 'row', alignSelf: 'center' }}
           >
             <TouchableOpacity
               style={styles.SubmitButtonStyle}
@@ -257,12 +257,13 @@ const styles = StyleSheet.create({
   },
   title: {
     color: 'black',
-    fontSize: 16
+    fontSize: 20,
+    marginHorizontal:20
   },
   title2: {
     color: '#fff',
     fontSize: 18,
-    marginHorizontal: 10
+    textAlign: 'center'
   },
   scrollViewContent: {
     top: 50,
@@ -297,8 +298,8 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = dispatch => ({
 
-  addOrder: (order,restaurantname) => {
-    dispatch(addOrder(order,restaurantname))
+  addOrder: (order, restaurantname) => {
+    dispatch(addOrder(order, restaurantname))
   },
 })
 
